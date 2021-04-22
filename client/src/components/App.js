@@ -1,11 +1,12 @@
+import React from 'react';
 import Login from './Login';
+import Dashboard from './Dashboard';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 function App() {
-	return (
-		<div className="App">
-			<Login />
-		</div>
-	);
+	const [id, setId] = useLocalStorage('id');
+
+	return id ? <Dashboard id={id} /> : <Login setUserId={setId} />;
 }
 
 export default App;
