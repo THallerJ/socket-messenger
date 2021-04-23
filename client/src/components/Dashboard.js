@@ -1,11 +1,20 @@
 import React from 'react';
 import Sidebar from './Sidebar';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+	root: {
+		display: 'flex',
+	},
+});
 
 const Dashboard = ({ id }) => {
+	const classes = useStyles();
+
 	return (
-		<div>
-			Your id: {id}
-			{/* Put this in App.js. Conditionally render as permanent depending on screen size (this will require passing permanent boolean prop to Sidebar. Must also conditionally render button to enable drawer)*/}
+		<div className={classes.root}>
+			<Sidebar id={id} />
+			Body
 		</div>
 	);
 };
