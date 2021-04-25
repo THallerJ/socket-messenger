@@ -29,9 +29,6 @@ const useStyles = makeStyles((theme) => ({
 	drawerTitle: {
 		padding: theme.spacing(1),
 	},
-	drawerContent: {
-		padding: theme.spacing(2),
-	},
 }));
 
 const Sidebar = ({ permanent, id }) => {
@@ -86,7 +83,7 @@ const Sidebar = ({ permanent, id }) => {
 				</Snackbar>
 			</div>
 			<Divider />
-			<List className={classes.drawerContent}>
+			<List>
 				{itemsList.map((item, index) => {
 					const { text, icon, onClick } = item;
 					return (
