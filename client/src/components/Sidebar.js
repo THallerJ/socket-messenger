@@ -10,11 +10,14 @@ import {
 	Divider,
 	Button,
 	Snackbar,
+	Hidden,
+	IconButton,
 } from '@material-ui/core';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
 import GroupIcon from '@material-ui/icons/Group';
 import Alert from '@material-ui/lab/Alert';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import MenuIcon from '@material-ui/icons/Menu';
 
 const useStyles = makeStyles((theme) => ({
 	drawer: {
@@ -34,6 +37,11 @@ const useStyles = makeStyles((theme) => ({
 const Sidebar = ({ permanent, id }) => {
 	const classes = useStyles();
 	const [openSnackbar, setOpenSnackbar] = useState(false);
+	const [openDrawer, setOpenDrawer] = useState(false);
+
+	function handleDrawerClose() {
+		setOpenDrawer(false);
+	}
 
 	const itemsList = [
 		{
@@ -46,14 +54,8 @@ const Sidebar = ({ permanent, id }) => {
 		},
 	];
 
-	return (
-		<Drawer
-			className={classes.drawer}
-			variant="persistent"
-			anchor="left"
-			open={true}
-			classes={{ paper: classes.drawer }}
-		>
+	const drawerContent = (
+		<div>
 			<div className={classes.drawerHeader}>
 				<Typography className={classes.drawerTitle} variant="h6">
 					Socket Messenger
@@ -95,7 +97,43 @@ const Sidebar = ({ permanent, id }) => {
 					);
 				})}
 			</List>
-		</Drawer>
+		</div>
+	);
+
+	return (
+		<div>
+			<Hidden smDown>
+				<Drawer
+					className={classes.drawer}
+					variant="persistent"
+					anchor="left"
+					open={true}
+					classes={{ paper: classes.drawer }}
+				>
+					{drawerContent}
+				</Drawer>
+			</Hidden>
+			<Hidden mdUp>
+				<IconButton
+					color="inherit"
+					edge="start"
+					onClick={() => setOpenDrawer(true)}
+					className={classes.menuButton}
+				>
+					<MenuIcon />
+				</IconButton>
+				<Drawer
+					className={classes.drawer}
+					anchor="left"
+					open={openDrawer}
+					close={() => handleDrawerClose}
+					classes={{ paper: classes.drawer }}
+					ModalProps={{ onBackdropClick: handleDrawerClose }}
+				>
+					{drawerContent}
+				</Drawer>
+			</Hidden>
+		</div>
 	);
 };
 

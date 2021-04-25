@@ -1,6 +1,7 @@
 import React from 'react';
 import Sidebar from './Sidebar';
 import { makeStyles } from '@material-ui/core/styles';
+import Body from './Body';
 
 const useStyles = makeStyles({
 	root: {
@@ -14,7 +15,7 @@ const Dashboard = ({ id }) => {
 	return (
 		<div className={classes.root}>
 			<Sidebar id={id} />
-			Body
+			<Body />
 		</div>
 	);
 };
