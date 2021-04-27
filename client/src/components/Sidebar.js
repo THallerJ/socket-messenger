@@ -18,6 +18,7 @@ import GroupIcon from '@material-ui/icons/Group';
 import Alert from '@material-ui/lab/Alert';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import MenuIcon from '@material-ui/icons/Menu';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
 	drawer: {
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const Sidebar = ({ permanent, id }) => {
+const Sidebar = ({ id }) => {
 	const classes = useStyles();
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const [openDrawer, setOpenDrawer] = useState(false);
@@ -44,10 +45,12 @@ const Sidebar = ({ permanent, id }) => {
 		{
 			text: 'Contacts',
 			icon: <GroupIcon />,
+			route: '/contacts',
 		},
 		{
 			text: 'Conversations',
 			icon: <ChatBubbleIcon />,
+			route: '/conversations',
 		},
 	];
 
@@ -85,9 +88,9 @@ const Sidebar = ({ permanent, id }) => {
 			<Divider />
 			<List>
 				{itemsList.map((item, index) => {
-					const { text, icon, onClick } = item;
+					const { text, icon, route } = item;
 					return (
-						<ListItem button key={text} onClick={onClick}>
+						<ListItem button key={text} component={Link} to={route}>
 							{icon && <ListItemIcon>{icon}</ListItemIcon>}
 							<ListItemText primary={text} />
 						</ListItem>

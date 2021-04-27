@@ -1,7 +1,11 @@
 import React from 'react';
 import Sidebar from './Sidebar';
 import { makeStyles } from '@material-ui/core/styles';
-import Body from './Body';
+import Contacts from './Contacts';
+import Conversations from './Conversations';
+import Chatroom from './Chatroom';
+
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 const useStyles = makeStyles({
 	root: {
@@ -14,8 +18,14 @@ const Dashboard = ({ id }) => {
 
 	return (
 		<div className={classes.root}>
-			<Sidebar id={id} />
-			<Body />
+			<Router>
+				<Sidebar id={id} />
+				<Switch>
+					<Route exact path="/contacts" render={Contacts} />
+					<Route exact path="/conversations" component={Conversations} />
+					<Route exact path="/chat" component={Chatroom} />
+				</Switch>
+			</Router>
 		</div>
 	);
 };
