@@ -19,6 +19,7 @@ import Alert from '@material-ui/lab/Alert';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Link } from 'react-router-dom';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const useStyles = makeStyles((theme) => ({
 	drawer: {
@@ -30,9 +31,14 @@ const useStyles = makeStyles((theme) => ({
 	drawerTitle: {
 		padding: theme.spacing(1),
 	},
+	drawerFooter: {
+		margin: theme.spacing(2),
+		position: 'fixed',
+		bottom: 0,
+	},
 }));
 
-const Sidebar = ({ id }) => {
+const Sidebar = ({ id, setUserId }) => {
 	const classes = useStyles();
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const [openDrawer, setOpenDrawer] = useState(false);
@@ -97,6 +103,17 @@ const Sidebar = ({ id }) => {
 					);
 				})}
 			</List>
+			<div className={classes.drawerFooter}>
+				<Button
+					variant="contained"
+					color="secondary"
+					size="large"
+					startIcon={<ExitToAppIcon />}
+					onClick={() => setUserId(null)}
+				>
+					Sign Out
+				</Button>
+			</div>
 		</div>
 	);
 

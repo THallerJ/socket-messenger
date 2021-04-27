@@ -13,13 +13,13 @@ const useStyles = makeStyles({
 	},
 });
 
-const Dashboard = ({ id }) => {
+const Dashboard = ({ id, setUserId }) => {
 	const classes = useStyles();
 
 	return (
 		<div className={classes.root}>
 			<Router>
-				<Sidebar id={id} />
+				<Sidebar id={id} setUserId={setUserId} />
 				<Switch>
 					<Route exact path="/contacts" render={Contacts} />
 					<Route exact path="/conversations" component={Conversations} />

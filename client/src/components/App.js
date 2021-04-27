@@ -6,7 +6,11 @@ import useLocalStorage from '../hooks/useLocalStorage';
 function App() {
 	const [id, setId] = useLocalStorage('id');
 
-	return id ? <Dashboard id={id} /> : <Login setUserId={setId} />;
+	return id ? (
+		<Dashboard id={id} setUserId={setId} />
+	) : (
+		<Login setUserId={setId} />
+	);
 }
 
 export default App;
