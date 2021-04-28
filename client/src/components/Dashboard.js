@@ -26,7 +26,7 @@ const Dashboard = ({ id, setUserId }) => {
 			<Router>
 				<Sidebar id={id} setUserId={setUserId} />
 				<Switch>
-					<Route exact path="/contacts" render={Contacts} />
+					<Route exact path="/contacts" component={Contacts} />
 					<Redirect exact from="/" to="/contacts" />
 					<Route exact path="/conversations" component={Conversations} />
 					<Route exact path="/chat" component={Chatroom} />
