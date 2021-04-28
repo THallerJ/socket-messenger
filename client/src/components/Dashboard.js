@@ -5,7 +5,12 @@ import Contacts from './Contacts';
 import Conversations from './Conversations';
 import Chatroom from './Chatroom';
 
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import {
+	BrowserRouter as Router,
+	Switch,
+	Route,
+	Redirect,
+} from 'react-router-dom';
 
 const useStyles = makeStyles({
 	root: {
@@ -22,6 +27,7 @@ const Dashboard = ({ id, setUserId }) => {
 				<Sidebar id={id} setUserId={setUserId} />
 				<Switch>
 					<Route exact path="/contacts" render={Contacts} />
+					<Redirect exact from="/" to="/contacts" />
 					<Route exact path="/conversations" component={Conversations} />
 					<Route exact path="/chat" component={Chatroom} />
 				</Switch>
