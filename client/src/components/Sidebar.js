@@ -106,7 +106,7 @@ const Sidebar = ({ id, setUserId }) => {
 			<div className={classes.drawerFooter}>
 				<Button
 					variant="contained"
-					color="secondary"
+					color="primary"
 					size="large"
 					startIcon={<ExitToAppIcon />}
 					onClick={() => setUserId(null)}
