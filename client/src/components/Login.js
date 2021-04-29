@@ -44,9 +44,7 @@ const Login = ({ setUserId }) => {
 						<Button onClick={loginWithId} color="primary">
 							Login
 						</Button>
-						<Button onClick={generateId} color="seconday">
-							Generate ID
-						</Button>
+						<Button onClick={generateId}>Generate ID</Button>
 					</ButtonGroup>
 				</Grid>
 			</Grid>
