@@ -9,7 +9,7 @@ import ContactsHeader from './ContactsHeader';
 
 const useStyles = makeStyles((theme) => ({
 	fab: {
-		position: 'absolute',
+		position: 'fixed',
 		bottom: theme.spacing(2),
 		right: theme.spacing(5),
 	},
@@ -39,14 +39,34 @@ const Contacts = () => {
 			name: 'Shelby',
 			id: '034c4b9d-1b6b-445d-89de-186c8b1abcc1',
 		},
+		{
+			name: 'Tom',
+			id: '034c4b9d-1b6b-445d-89de-186c8b1abcc1',
+		},
+		{
+			name: 'Bill Hickensburg',
+			id: '034c4b9d-1b6b-445d-89de-186c8b1abcc1',
+		},
+		{
+			name: 'Steve',
+			id: '034c4b9d-1b6b-445d-89de-186c8b1abcc1',
+		},
+		{
+			name: 'Ryan',
+			id: '034c4b9d-1b6b-445d-89de-186c8b1abcc1',
+		},
+		{
+			name: 'Shelby',
+			id: '034c4b9d-1b6b-445d-89de-186c8b1abcc1',
+		},
 	];
 
 	return (
 		<div>
 			<ContactsHeader />
 			<Grid container alignItems="center" justify="center">
-				{people.map((person) => {
-					return <Contact name={person.name} id={person.id} />;
+				{people.map((person, index) => {
+					return <Contact key={index} name={person.name} id={person.id} />;
 				})}
 			</Grid>
 			<AddContactDialog open={openDialog} setOpen={setOpenDialog} />
