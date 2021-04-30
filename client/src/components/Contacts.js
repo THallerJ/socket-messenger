@@ -5,6 +5,7 @@ import AddIcon from '@material-ui/icons/Add';
 import AddContactDialog from './AddContactDialog';
 import Contact from './Contact';
 import { Grid } from '@material-ui/core';
+import ContactsHeader from './ContactsHeader';
 
 const useStyles = makeStyles((theme) => ({
 	fab: {
@@ -42,6 +43,7 @@ const Contacts = () => {
 
 	return (
 		<div>
+			<ContactsHeader />
 			<Grid container alignItems="center" justify="center">
 				{people.map((person) => {
 					return <Contact name={person.name} id={person.id} />;
