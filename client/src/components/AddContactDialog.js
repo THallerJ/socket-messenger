@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
 	Button,
 	ButtonGroup,
@@ -9,6 +9,7 @@ import {
 	Divider,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 const useStyles = makeStyles((theme) => ({
 	divider: {
@@ -33,9 +34,16 @@ const useStyles = makeStyles((theme) => ({
 const AddContactDialog = ({ open, setOpen }) => {
 	const classes = useStyles();
 
+	const nameRef = useRef();
+	const idRef = useRef();
+
+	const [contacts, setContacts] = useLocalStorage('contacts', []);
+
 	function handleSubmit() {
-		// add logic for adding contact
-		console.log('contact added');
+		setContacts((oldContacts) => [
+			...oldContacts,
+			{ id: idRef.current.value, name: nameRef.current.value },
+		]);
 		setOpen(false);
 	}
 
@@ -52,6 +60,7 @@ const AddContactDialog = ({ open, setOpen }) => {
 			<div className={classes.textfields}>
 				<TextField
 					variant="outlined"
+					inputRef={nameRef}
 					autoFocus
 					id="name"
 					label="Enter name"
@@ -59,6 +68,7 @@ const AddContactDialog = ({ open, setOpen }) => {
 				/>
 				<TextField
 					className={classes.idTextField}
+					inputRef={idRef}
 					variant="outlined"
 					id="ID"
 					label="Enter ID"
