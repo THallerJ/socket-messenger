@@ -12,6 +12,7 @@ import {
 	Snackbar,
 	Hidden,
 	IconButton,
+	TextareaAutosize,
 } from '@material-ui/core';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
 import GroupIcon from '@material-ui/icons/Group';
@@ -20,6 +21,8 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Link } from 'react-router-dom';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { useContacts } from '../contexts/ContactsContext';
+import useEffectInitial from '../hooks/useEffectInitial';
 
 const useStyles = makeStyles((theme) => ({
 	drawer: {
@@ -42,9 +45,20 @@ const Sidebar = ({ id, setUserId }) => {
 	const classes = useStyles();
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const [openDrawer, setOpenDrawer] = useState(false);
+	const [signOut, setSignOut] = useState(false);
+	const { setContacts } = useContacts();
+
+	useEffectInitial(() => {
+		setUserId(null);
+	}, [signOut]);
 
 	function handleDrawerClose() {
 		setOpenDrawer(false);
+	}
+
+	function signout() {
+		setContacts([]);
+		setSignOut(true);
 	}
 
 	const itemsList = [
@@ -109,7 +123,7 @@ const Sidebar = ({ id, setUserId }) => {
 					color="primary"
 					size="large"
 					startIcon={<ExitToAppIcon />}
-					onClick={() => setUserId(null)}
+					onClick={() => signout()}
 				>
 					Sign Out
 				</Button>
