@@ -9,7 +9,7 @@ import {
 	Divider,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import useLocalStorage from '../hooks/useLocalStorage';
+import { useContacts } from '../contexts/ContactsContext';
 
 const useStyles = makeStyles((theme) => ({
 	divider: {
@@ -37,13 +37,14 @@ const AddContactDialog = ({ open, setOpen }) => {
 	const nameRef = useRef();
 	const idRef = useRef();
 
-	const [contacts, setContacts] = useLocalStorage('contacts', []);
+	const { contacts, setContacts } = useContacts();
 
 	function handleSubmit() {
-		setContacts((oldContacts) => [
-			...oldContacts,
+		const tempContacts = [
+			...contacts,
 			{ id: idRef.current.value, name: nameRef.current.value },
-		]);
+		];
+		setContacts(tempContacts);
 		setOpen(false);
 	}
 
