@@ -48,7 +48,7 @@ const Contacts = () => {
 					You don't have any contacts.
 				</Typography>
 				<Typography color="textSecondary">
-					Click the add symbol in the bottom right corner to add a contact.
+					Click the '+' symbol in the bottom right corner to add a contact.
 				</Typography>
 			</Grid>
 		</div>
