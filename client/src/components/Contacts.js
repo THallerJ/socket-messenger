@@ -13,9 +13,9 @@ const useStyles = makeStyles((theme) => ({
 		width: '100%',
 	},
 	fab: {
-		position: 'absolute',
+		position: 'fixed',
 		bottom: theme.spacing(2),
-		right: theme.spacing(5),
+		right: theme.spacing(2),
 	},
 }));
 const Contacts = () => {
