@@ -44,7 +44,14 @@ const AddContactDialog = ({ open, setOpen }) => {
 			...contacts,
 			{ id: idRef.current.value, name: nameRef.current.value },
 		];
-		setContacts(tempContacts);
+
+		setContacts(
+			// ensures that the array of contacts is sorted alphabetically
+			tempContacts.sort((a, b) => {
+				return a.name > b.name ? 1 : -1;
+			})
+		);
+
 		setOpen(false);
 	}
 
