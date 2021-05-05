@@ -48,7 +48,7 @@ const AddContactDialog = ({ open, setOpen }) => {
 		setContacts(
 			// ensures that the array of contacts is sorted alphabetically
 			tempContacts.sort((a, b) => {
-				return a.name > b.name ? 1 : -1;
+				return a.name.localeCompare(b.name);
 			})
 		);
 
