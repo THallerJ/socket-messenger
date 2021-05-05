@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { useContacts } from '../contexts/ContactsContext';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -21,6 +22,16 @@ const useStyles = makeStyles((theme) => ({
 const Contact = ({ name, id }) => {
 	const classes = useStyles();
 
+	const { contacts, setContacts } = useContacts();
+
+	function deleteContact() {
+		setContacts(
+			contacts.filter((contact) => {
+				return contact.id !== id;
+			})
+		);
+	}
+
 	return (
 		<Card variant="outlined" className={classes.root}>
 			<CardContent>
@@ -32,7 +43,7 @@ const Contact = ({ name, id }) => {
 						<Typography noWrap>{id}</Typography>
 					</Grid>
 					<Grid item xs={1}>
-						<IconButton onClick={() => console.log('delete contact')}>
+						<IconButton onClick={deleteContact}>
 							<DeleteIcon />
 						</IconButton>
 					</Grid>
