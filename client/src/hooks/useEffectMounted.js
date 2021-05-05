@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+/* eslint-disable */
+import { useEffect, useRef } from 'react';
 
 // functions like useEffect except it doesn't run on initial render
-const useEffectInitial = (func, deps) => {
+const useEffectMounted = (func, deps) => {
 	const didMount = useRef(false);
 
 	useEffect(() => {
@@ -10,4 +11,4 @@ const useEffectInitial = (func, deps) => {
 	}, deps);
 };
 
-export default useEffectInitial;
+export default useEffectMounted;
