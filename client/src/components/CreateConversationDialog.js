@@ -9,6 +9,7 @@ import {
 	FormControlLabel,
 	FormGroup,
 	Divider,
+	Grid,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useContacts } from '../contexts/ContactsContext';
@@ -16,14 +17,11 @@ import { useContacts } from '../contexts/ContactsContext';
 const useStyles = makeStyles((theme) => ({
 	divider: {
 		marginLeft: theme.spacing(2),
-		marginRight: theme.spacing(5),
+		marginRight: theme.spacing(2),
 	},
-	contactList: {
-		display: 'flex',
-		flexDirection: 'column',
+	body: {
 		padding: theme.spacing(3),
 	},
-
 	buttonGroup: {
 		justifyContent: 'center',
 		paddingBottom: theme.spacing(3),
@@ -57,8 +55,41 @@ const AddConversationDialog = ({ open, setOpen }) => {
 		);
 	}
 
+	const contactList = (
+		<FormGroup>
+			{contacts.map((contact, index) => {
+				return (
+					<FormControlLabel
+						key={index}
+						control={
+							<Checkbox
+								color="primary"
+								checked={contactChecked[index]}
+								onClick={() => toggleContactCheckbox(index)}
+								name="checkedA"
+							/>
+						}
+						label={contact.name}
+					/>
+				);
+			})}
+		</FormGroup>
+	);
+
+	const emptyContactList = (
+		<Grid container justify="center">
+			<Typography>You have no contacts</Typography>
+		</Grid>
+	);
+
+	const submitButton = (
+		<Button onClick={handleSubmit} variant="contained" color="primary">
+			OK
+		</Button>
+	);
+
 	return (
-		<Dialog fullWidth open={open} onBackdropClick={() => setOpen(false)}>
+		<Dialog open={open} onBackdropClick={() => setOpen(false)}>
 			<DialogTitle>
 				<div>
 					<Typography align="center" variant="h6">
@@ -67,30 +98,11 @@ const AddConversationDialog = ({ open, setOpen }) => {
 				</div>
 			</DialogTitle>
 			<Divider className={classes.divider} />
-			<div className={classes.contactList}>
-				<FormGroup>
-					{contacts.map((contact, index) => {
-						return (
-							<FormControlLabel
-								key={index}
-								control={
-									<Checkbox
-										color="primary"
-										checked={contactChecked[index]}
-										onClick={() => toggleContactCheckbox(index)}
-										name="checkedA"
-									/>
-								}
-								label={contact.name}
-							/>
-						);
-					})}
-				</FormGroup>
+			<div className={classes.body}>
+				{contacts.length > 0 ? contactList : emptyContactList}
 			</div>
 			<ButtonGroup className={classes.buttonGroup}>
-				<Button onClick={handleSubmit} variant="contained" color="primary">
-					OK
-				</Button>
+				{contacts.length > 0 ? submitButton : ''}
 				<Button onClick={() => setOpen(false)} variant="contained">
 					Cancel
 				</Button>
