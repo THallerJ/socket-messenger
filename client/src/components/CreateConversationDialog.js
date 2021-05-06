@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	Button,
 	ButtonGroup,
@@ -34,9 +34,27 @@ const AddConversationDialog = ({ open, setOpen }) => {
 	const classes = useStyles();
 
 	const { contacts } = useContacts();
+	const [contactChecked, setContactChecked] = useState(
+		contacts.slice().fill(false)
+	);
 
 	function handleSubmit() {
+		const contactsInConversation = [];
+		contactChecked.forEach((value, index) => {
+			if (value) contactsInConversation.push(contacts[index]);
+		});
+
+		setContactChecked(contacts.slice().fill(false));
+
+		// create a conversation with the contacts in contactsInConversation
+		console.log(contactsInConversation);
 		setOpen(false);
+	}
+
+	function toggleContactCheckbox(index) {
+		setContactChecked(
+			contactChecked.map((value, i) => (i === index ? !value : value))
+		);
 	}
 
 	return (
@@ -51,15 +69,15 @@ const AddConversationDialog = ({ open, setOpen }) => {
 			<Divider className={classes.divider} />
 			<div className={classes.contactList}>
 				<FormGroup>
-					{contacts.map((contact) => {
+					{contacts.map((contact, index) => {
 						return (
 							<FormControlLabel
+								key={index}
 								control={
 									<Checkbox
-										checked={false}
-										onChange={() => {
-											console.log('test');
-										}}
+										color="primary"
+										checked={contactChecked[index]}
+										onClick={() => toggleContactCheckbox(index)}
 										name="checkedA"
 									/>
 								}
