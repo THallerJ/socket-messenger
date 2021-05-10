@@ -13,6 +13,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useContacts } from '../contexts/ContactsContext';
+import { useConversations } from '../contexts/ConversationsContext';
 
 const useStyles = makeStyles((theme) => ({
 	divider: {
@@ -32,6 +33,8 @@ const AddConversationDialog = ({ open, setOpen }) => {
 	const classes = useStyles();
 
 	const { contacts } = useContacts();
+	const { conversations, setConversations } = useConversations();
+
 	const [contactChecked, setContactChecked] = useState(
 		contacts.slice().fill(false)
 	);
@@ -39,10 +42,12 @@ const AddConversationDialog = ({ open, setOpen }) => {
 	function handleSubmit() {
 		const contactsInConversation = [];
 		contactChecked.forEach((value, index) => {
-			if (value) contactsInConversation.push(contacts[index]);
+			if (value) contactsInConversation.push(contacts[index].id);
 		});
 
 		setContactChecked(contacts.slice().fill(false));
+
+		setConversations([{ recipients: contactsInConversation, messages: [] }]);
 
 		// create a conversation with the contacts in contactsInConversation
 		console.log(contactsInConversation);
