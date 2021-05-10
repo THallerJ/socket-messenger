@@ -39,6 +39,16 @@ const AddConversationDialog = ({ open, setOpen }) => {
 		contacts.slice().fill(false)
 	);
 
+	function compareArrays(a, b) {
+		if (a.length !== b.length) {
+			return false;
+		} else {
+			return a.every((element, index) => {
+				return element === b[index];
+			});
+		}
+	}
+
 	function handleSubmit() {
 		const contactsInConversation = [];
 		contactChecked.forEach((value, index) => {
@@ -47,10 +57,20 @@ const AddConversationDialog = ({ open, setOpen }) => {
 
 		setContactChecked(contacts.slice().fill(false));
 
-		setConversations([{ recipients: contactsInConversation, messages: [] }]);
+		const conversationExists = conversations.some((conversation) => {
+			return compareArrays(conversation.recipients, contactsInConversation);
+		});
+
+		if (!conversationExists) {
+			const tempConversations = [
+				...conversations,
+				{ recipients: contactsInConversation, messages: [] },
+			];
+
+			setConversations(tempConversations);
+		}
 
 		// create a conversation with the contacts in contactsInConversation
-		console.log(contactsInConversation);
 		setOpen(false);
 	}
 
