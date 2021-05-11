@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Fab } from '@material-ui/core';
+import { Fab, Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import CreateConversationDialog from './CreateConversationDialog';
+import { useConversations } from '../contexts/ConversationsContext';
+import Conversation from './Conversation';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -19,11 +21,50 @@ const Conversations = () => {
 	const classes = useStyles();
 
 	const [openDialog, setOpenDialog] = useState(false);
+	const { conversations } = useConversations();
+
+	const conversationList = (
+		<div>
+			<Grid container alignItems="center" justify="center">
+				{conversations.map((conversation, index) => {
+					return (
+						<Conversation
+							key={index}
+							recipients={conversation.recipients}
+							lastMessage={
+								conversation.messages[conversation.messages.length - 1]
+							}
+						/>
+					);
+				})}
+			</Grid>
+		</div>
+	);
+
+	const emptyConversationtList = (
+		<div>
+			<Grid
+				container
+				direction="column"
+				alignItems="center"
+				justify="center"
+				style={{ minHeight: '95vh' }}
+			>
+				<Typography color="textSecondary">
+					You don't have any active conversations.
+				</Typography>
+				<Typography color="textSecondary">
+					Click the '+' symbol in the bottom right corner to create a
+					conversation.
+				</Typography>
+			</Grid>
+		</div>
+	);
 
 	return (
-		<div>
+		<div className={classes.root}>
 			<CreateConversationDialog open={openDialog} setOpen={setOpenDialog} />
-
+			{conversations.length > 0 ? conversationList : emptyConversationtList}
 			<Fab
 				className={classes.fab}
 				onClick={() => setOpenDialog(true)}
