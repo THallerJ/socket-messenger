@@ -22,6 +22,7 @@ import { Link } from 'react-router-dom';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useContacts } from '../contexts/ContactsContext';
 import useEffectMounted from '../hooks/useEffectMounted';
+import { useConversations } from '../contexts/ConversationsContext';
 
 const useStyles = makeStyles((theme) => ({
 	drawer: {
@@ -46,6 +47,7 @@ const Sidebar = ({ id, setUserId }) => {
 	const [openDrawer, setOpenDrawer] = useState(false);
 	const [signOut, setSignOut] = useState(false);
 	const { setContacts } = useContacts();
+	const { setConversations } = useConversations();
 
 	useEffectMounted(() => {
 		setUserId(null);
@@ -57,6 +59,7 @@ const Sidebar = ({ id, setUserId }) => {
 
 	function signout() {
 		setContacts([]);
+		setConversations([]);
 		setSignOut(true);
 	}
 
