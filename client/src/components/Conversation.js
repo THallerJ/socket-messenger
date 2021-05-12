@@ -9,6 +9,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useContacts } from '../contexts/ContactsContext';
+import { useConversations } from '../contexts/ConversationsContext';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -22,6 +23,25 @@ const useStyles = makeStyles((theme) => ({
 const Conversation = ({ recipients, lastMessage }) => {
 	const classes = useStyles();
 	const { idToName } = useContacts();
+	const { conversations, setConversations } = useConversations();
+
+	function compareArrays(a, b) {
+		if (a.length !== b.length) {
+			return false;
+		} else {
+			return a.every((element, index) => {
+				return element === b[index];
+			});
+		}
+	}
+
+	function deleteConversation() {
+		setConversations(
+			conversations.filter((conversation) => {
+				return !compareArrays(conversation.recipients, recipients);
+			})
+		);
+	}
 
 	return (
 		<Card variant="outlined" className={classes.root}>
@@ -34,7 +54,7 @@ const Conversation = ({ recipients, lastMessage }) => {
 						<Typography noWrap>{lastMessage}</Typography>
 					</Grid>
 					<Grid item xs={1}>
-						<IconButton onClick={() => console.log('delete')}>
+						<IconButton onClick={() => deleteConversation()}>
 							<DeleteIcon />
 						</IconButton>
 					</Grid>
