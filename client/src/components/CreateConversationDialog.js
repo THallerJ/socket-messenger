@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const AddConversationDialog = ({ open, setOpen }) => {
+const AddConversationDialog = ({ open, setOpen, callback }) => {
 	const classes = useStyles();
 
 	const { contacts } = useContacts();
@@ -47,6 +47,7 @@ const AddConversationDialog = ({ open, setOpen }) => {
 
 		setContactChecked(contacts.slice().fill(false));
 
+		callback(contactsInConversation);
 		createConversation(contactsInConversation);
 
 		// create a conversation with the contacts in contactsInConversation

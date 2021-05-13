@@ -5,6 +5,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CreateConversationDialog from './CreateConversationDialog';
 import { useConversations } from '../contexts/ConversationsContext';
 import Conversation from './Conversation';
+import useEffectMounted from '../hooks/useEffectMounted';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -21,7 +22,16 @@ const Conversations = () => {
 	const classes = useStyles();
 
 	const [openDialog, setOpenDialog] = useState(false);
+	const [newConversationRecipients, setNewConversationRecipients] = useState();
 	const { conversations } = useConversations();
+
+	useEffectMounted(() => {
+		console.log(newConversationRecipients);
+	}, [newConversationRecipients]);
+
+	function dialogCallback(recipients) {
+		setNewConversationRecipients(recipients);
+	}
 
 	const conversationList = (
 		<div>
@@ -63,7 +73,11 @@ const Conversations = () => {
 
 	return (
 		<div className={classes.root}>
-			<CreateConversationDialog open={openDialog} setOpen={setOpenDialog} />
+			<CreateConversationDialog
+				open={openDialog}
+				setOpen={setOpenDialog}
+				callback={dialogCallback}
+			/>
 			{conversations.length > 0 ? conversationList : emptyConversationtList}
 			<Fab
 				className={classes.fab}
