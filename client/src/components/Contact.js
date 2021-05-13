@@ -21,16 +21,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Contact = ({ name, id }) => {
 	const classes = useStyles();
-
-	const { contacts, setContacts } = useContacts();
-
-	function deleteContact() {
-		setContacts(
-			contacts.filter((contact) => {
-				return contact.id !== id;
-			})
-		);
-	}
+	const { deleteContact } = useContacts();
 
 	return (
 		<Card variant="outlined" className={classes.root}>
@@ -43,7 +34,7 @@ const Contact = ({ name, id }) => {
 						<Typography noWrap>{id}</Typography>
 					</Grid>
 					<Grid item xs={1}>
-						<IconButton onClick={deleteContact}>
+						<IconButton onClick={() => deleteContact(id)}>
 							<DeleteIcon />
 						</IconButton>
 					</Grid>

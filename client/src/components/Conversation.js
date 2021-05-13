@@ -23,25 +23,7 @@ const useStyles = makeStyles((theme) => ({
 const Conversation = ({ recipients, lastMessage }) => {
 	const classes = useStyles();
 	const { idToName } = useContacts();
-	const { conversations, setConversations } = useConversations();
-
-	function compareArrays(a, b) {
-		if (a.length !== b.length) {
-			return false;
-		} else {
-			return a.every((element, index) => {
-				return element === b[index];
-			});
-		}
-	}
-
-	function deleteConversation() {
-		setConversations(
-			conversations.filter((conversation) => {
-				return !compareArrays(conversation.recipients, recipients);
-			})
-		);
-	}
+	const { deleteConversation } = useConversations();
 
 	return (
 		<Card variant="outlined" className={classes.root}>
@@ -54,7 +36,7 @@ const Conversation = ({ recipients, lastMessage }) => {
 						<Typography noWrap>{lastMessage}</Typography>
 					</Grid>
 					<Grid item xs={1}>
-						<IconButton onClick={() => deleteConversation()}>
+						<IconButton onClick={() => deleteConversation(recipients)}>
 							<DeleteIcon />
 						</IconButton>
 					</Grid>

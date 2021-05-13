@@ -37,21 +37,10 @@ const AddContactDialog = ({ open, setOpen }) => {
 	const nameRef = useRef();
 	const idRef = useRef();
 
-	const { contacts, setContacts } = useContacts();
+	const { createContact } = useContacts();
 
 	function handleSubmit() {
-		const tempContacts = [
-			...contacts,
-			{ id: idRef.current.value, name: nameRef.current.value },
-		];
-
-		setContacts(
-			// ensures that the array of contacts is sorted alphabetically
-			tempContacts.sort((a, b) => {
-				return a.name.localeCompare(b.name);
-			})
-		);
-
+		createContact(idRef.current.value, nameRef.current.value);
 		setOpen(false);
 	}
 

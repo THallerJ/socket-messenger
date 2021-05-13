@@ -8,7 +8,45 @@ export const ConversationsContextProvider = ({ children }) => {
 		'conversations',
 		[]
 	);
-	const value = { conversations, setConversations };
+
+	function compareArrays(a, b) {
+		if (a.length !== b.length) {
+			return false;
+		} else {
+			return a.every((element, index) => {
+				return element === b[index];
+			});
+		}
+	}
+
+	function deleteConversation(recipients) {
+		setConversations(
+			conversations.filter((conversation) => {
+				return !compareArrays(conversation.recipients, recipients);
+			})
+		);
+	}
+
+	function createConversation(contactsInConversation) {
+		const conversationExists = conversations.some((conversation) => {
+			return compareArrays(conversation.recipients, contactsInConversation);
+		});
+
+		if (!conversationExists) {
+			const tempConversations = [
+				...conversations,
+				{ recipients: contactsInConversation, messages: [] },
+			];
+
+			setConversations(tempConversations);
+		}
+	}
+	const value = {
+		conversations,
+		setConversations,
+		createConversation,
+		deleteConversation,
+	};
 
 	return (
 		<ConversationsContext.Provider value={value}>

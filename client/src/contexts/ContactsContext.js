@@ -16,7 +16,32 @@ export const ContactsContextProvider = ({ children }) => {
 			.map((contact) => contact.name);
 	}
 
-	const value = { contacts, setContacts, idToName };
+	function createContact(id, name) {
+		const tempContacts = [...contacts, { id: id, name: name }];
+
+		setContacts(
+			// ensures that the array of contacts is sorted alphabetically
+			tempContacts.sort((a, b) => {
+				return a.name.localeCompare(b.name);
+			})
+		);
+	}
+
+	function deleteContact(id) {
+		setContacts(
+			contacts.filter((contact) => {
+				return contact.id !== id;
+			})
+		);
+	}
+
+	const value = {
+		contacts,
+		setContacts,
+		createContact,
+		deleteContact,
+		idToName,
+	};
 
 	return (
 		<ContactsContext.Provider value={value}>

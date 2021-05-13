@@ -33,21 +33,11 @@ const AddConversationDialog = ({ open, setOpen }) => {
 	const classes = useStyles();
 
 	const { contacts } = useContacts();
-	const { conversations, setConversations } = useConversations();
+	const { createConversation } = useConversations();
 
 	const [contactChecked, setContactChecked] = useState(
 		contacts.slice().fill(false)
 	);
-
-	function compareArrays(a, b) {
-		if (a.length !== b.length) {
-			return false;
-		} else {
-			return a.every((element, index) => {
-				return element === b[index];
-			});
-		}
-	}
 
 	function handleSubmit() {
 		const contactsInConversation = [];
@@ -57,18 +47,7 @@ const AddConversationDialog = ({ open, setOpen }) => {
 
 		setContactChecked(contacts.slice().fill(false));
 
-		const conversationExists = conversations.some((conversation) => {
-			return compareArrays(conversation.recipients, contactsInConversation);
-		});
-
-		if (!conversationExists) {
-			const tempConversations = [
-				...conversations,
-				{ recipients: contactsInConversation, messages: [] },
-			];
-
-			setConversations(tempConversations);
-		}
+		createConversation(contactsInConversation);
 
 		// create a conversation with the contacts in contactsInConversation
 		setOpen(false);
