@@ -1,11 +1,12 @@
-import React, { useContext } from 'react';
-import useLocalStorage from '../hooks/useLocalStorage';
+import React, { useContext } from "react";
+import useLocalStorage from "../hooks/useLocalStorage";
+import { v4 as uuidV4 } from "uuid";
 
 const ConversationsContext = React.createContext();
 
 export const ConversationsContextProvider = ({ children }) => {
 	const [conversations, setConversations] = useLocalStorage(
-		'conversations',
+		"conversations",
 		[]
 	);
 
@@ -19,10 +20,10 @@ export const ConversationsContextProvider = ({ children }) => {
 		}
 	}
 
-	function deleteConversation(recipients) {
+	function deleteConversation(id) {
 		setConversations(
 			conversations.filter((conversation) => {
-				return !compareArrays(conversation.recipients, recipients);
+				return conversation.id !== id;
 			})
 		);
 	}
@@ -35,7 +36,7 @@ export const ConversationsContextProvider = ({ children }) => {
 		if (!conversationExists) {
 			const tempConversations = [
 				...conversations,
-				{ recipients: contactsInConversation, messages: [] },
+				{ id: uuidV4(), recipients: contactsInConversation, messages: [] },
 			];
 
 			setConversations(tempConversations);

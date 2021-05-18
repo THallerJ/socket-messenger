@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const Conversation = ({ recipients, lastMessage }) => {
+const Conversation = ({ id, recipients, lastMessage }) => {
 	const classes = useStyles();
 	const { idToName } = useContacts();
 	const { deleteConversation } = useConversations();
@@ -43,7 +43,7 @@ const Conversation = ({ recipients, lastMessage }) => {
 								onClick={(e) => {
 									e.stopPropagation();
 									e.preventDefault();
-									deleteConversation(recipients);
+									deleteConversation(id);
 								}}
 							>
 								<DeleteIcon />

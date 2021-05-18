@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { Fab, Grid, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import AddIcon from '@material-ui/icons/Add';
-import CreateConversationDialog from './CreateConversationDialog';
-import { useConversations } from '../contexts/ConversationsContext';
-import Conversation from './Conversation';
-import useEffectMounted from '../hooks/useEffectMounted';
+import React, { useState } from "react";
+import { Fab, Grid, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import AddIcon from "@material-ui/icons/Add";
+import CreateConversationDialog from "./CreateConversationDialog";
+import { useConversations } from "../contexts/ConversationsContext";
+import Conversation from "./Conversation";
+import useEffectMounted from "../hooks/useEffectMounted";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
-		width: '100%',
+		width: "100%",
 	},
 	fab: {
-		position: 'fixed',
+		position: "fixed",
 		bottom: theme.spacing(2),
 		right: theme.spacing(2),
 	},
@@ -40,6 +40,7 @@ const Conversations = () => {
 					return (
 						<Conversation
 							key={index}
+							id={conversation.id}
 							recipients={conversation.recipients}
 							lastMessage={
 								conversation.messages[conversation.messages.length - 1]
@@ -58,7 +59,7 @@ const Conversations = () => {
 				direction="column"
 				alignItems="center"
 				justify="center"
-				style={{ minHeight: '95vh' }}
+				style={{ minHeight: "95vh" }}
 			>
 				<Typography color="textSecondary">
 					You don't have any active conversations.
