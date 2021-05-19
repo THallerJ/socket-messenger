@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
 	Button,
 	ButtonGroup,
@@ -10,10 +10,10 @@ import {
 	FormGroup,
 	Divider,
 	Grid,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { useContacts } from '../contexts/ContactsContext';
-import { useConversations } from '../contexts/ConversationsContext';
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { useContacts } from "../contexts/ContactsContext";
+import { useConversations } from "../contexts/ConversationsContext";
 
 const useStyles = makeStyles((theme) => ({
 	divider: {
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 		padding: theme.spacing(3),
 	},
 	buttonGroup: {
-		justifyContent: 'center',
+		justifyContent: "center",
 		paddingBottom: theme.spacing(3),
 	},
 }));
@@ -47,10 +47,8 @@ const AddConversationDialog = ({ open, setOpen, callback }) => {
 
 		setContactChecked(contacts.slice().fill(false));
 
-		callback(contactsInConversation);
-		createConversation(contactsInConversation);
-
-		// create a conversation with the contacts in contactsInConversation
+		// creates a conversation and sends the conversation id to the callback
+		callback(createConversation(contactsInConversation));
 		setOpen(false);
 	}
 
@@ -107,7 +105,7 @@ const AddConversationDialog = ({ open, setOpen, callback }) => {
 				{contacts.length > 0 ? contactList : emptyContactList}
 			</div>
 			<ButtonGroup className={classes.buttonGroup}>
-				{contacts.length > 0 ? submitButton : ''}
+				{contacts.length > 0 ? submitButton : ""}
 				<Button onClick={() => setOpen(false)} variant="contained">
 					Cancel
 				</Button>

@@ -29,19 +29,31 @@ export const ConversationsContextProvider = ({ children }) => {
 	}
 
 	function createConversation(contactsInConversation) {
-		const conversationExists = conversations.some((conversation) => {
+		const conversationExists = conversations.find((conversation) => {
 			return compareArrays(conversation.recipients, contactsInConversation);
 		});
 
+		var conversationId;
 		if (!conversationExists) {
+			conversationId = uuidV4();
 			const tempConversations = [
 				...conversations,
-				{ id: uuidV4(), recipients: contactsInConversation, messages: [] },
+				{
+					id: conversationId,
+					recipients: contactsInConversation,
+					messages: [],
+				},
 			];
 
 			setConversations(tempConversations);
+			return conversationId;
+		} else {
+			conversationId = conversationExists.id;
 		}
+
+		return conversationId;
 	}
+
 	const value = {
 		conversations,
 		setConversations,

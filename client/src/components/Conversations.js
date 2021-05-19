@@ -6,6 +6,7 @@ import CreateConversationDialog from "./CreateConversationDialog";
 import { useConversations } from "../contexts/ConversationsContext";
 import Conversation from "./Conversation";
 import useEffectMounted from "../hooks/useEffectMounted";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -22,15 +23,16 @@ const Conversations = () => {
 	const classes = useStyles();
 
 	const [openDialog, setOpenDialog] = useState(false);
-	const [newConversationRecipients, setNewConversationRecipients] = useState();
+	const [newConversationId, setNewConversationId] = useState();
 	const { conversations } = useConversations();
+	const history = useHistory();
 
 	useEffectMounted(() => {
-		console.log(newConversationRecipients);
-	}, [newConversationRecipients]);
+		history.push("conversations/" + newConversationId);
+	}, [newConversationId]);
 
-	function dialogCallback(recipients) {
-		setNewConversationRecipients(recipients);
+	function dialogCallback(id) {
+		setNewConversationId(id);
 	}
 
 	const conversationList = (
