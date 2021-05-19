@@ -29,7 +29,10 @@ const Conversation = ({ id, recipients, lastMessage }) => {
 
 	return (
 		<Card variant="outlined" className={classes.root}>
-			<CardActionArea component={Link} to={"/chatroom"}>
+			<CardActionArea
+				component={Link}
+				to={{ pathname: "/conversations/" + id }}
+			>
 				<CardContent>
 					<Grid container spacing={2}>
 						<Grid item xs={3} className={classes.name}>

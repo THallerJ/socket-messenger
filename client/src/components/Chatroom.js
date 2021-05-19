@@ -1,7 +1,10 @@
-import React from 'react';
+import React from "react";
+import { useParams } from "react-router";
 
 const Chatroom = () => {
-	return <div>Chatroom</div>;
+	const { conversationId } = useParams();
+
+	return <div>chatroom: {conversationId}</div>;
 };
 
 export default Chatroom;

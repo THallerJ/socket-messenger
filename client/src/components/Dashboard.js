@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Contacts from "./Contacts";
 import Conversations from "./Conversations";
 import Chatroom from "./Chatroom";
-
 import {
 	BrowserRouter as Router,
 	Switch,
@@ -29,7 +28,11 @@ const Dashboard = ({ id, setUserId }) => {
 					<Route exact path="/contacts" component={Contacts} />
 					<Redirect exact from="/" to="/contacts" />
 					<Route exact path="/conversations" component={Conversations} />
-					<Route exact path="/chatroom" component={Chatroom} />
+					<Route
+						exact
+						path="/conversations/:conversationId"
+						component={Chatroom}
+					/>
 				</Switch>
 			</Router>
 		</div>
