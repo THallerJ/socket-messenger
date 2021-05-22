@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import {
 	Drawer,
 	ListItem,
@@ -12,17 +12,18 @@ import {
 	Snackbar,
 	Hidden,
 	IconButton,
-} from '@material-ui/core';
-import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
-import GroupIcon from '@material-ui/icons/Group';
-import Alert from '@material-ui/lab/Alert';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import MenuIcon from '@material-ui/icons/Menu';
-import { Link } from 'react-router-dom';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { useContacts } from '../contexts/ContactsContext';
-import useEffectMounted from '../hooks/useEffectMounted';
-import { useConversations } from '../contexts/ConversationsContext';
+} from "@material-ui/core";
+import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
+import GroupIcon from "@material-ui/icons/Group";
+import Alert from "@material-ui/lab/Alert";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import MenuIcon from "@material-ui/icons/Menu";
+import { Link, useRouteMatch } from "react-router-dom";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import { useContacts } from "../contexts/ContactsContext";
+import useEffectMounted from "../hooks/useEffectMounted";
+import { useConversations } from "../contexts/ConversationsContext";
+import { useUser } from "../contexts/UserContext";
 
 const useStyles = makeStyles((theme) => ({
 	drawer: {
@@ -36,18 +37,20 @@ const useStyles = makeStyles((theme) => ({
 	},
 	drawerFooter: {
 		margin: theme.spacing(2),
-		position: 'fixed',
+		position: "fixed",
 		bottom: 0,
 	},
 }));
 
-const Sidebar = ({ id, setUserId }) => {
+const Sidebar = () => {
 	const classes = useStyles();
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const [openDrawer, setOpenDrawer] = useState(false);
 	const [signOut, setSignOut] = useState(false);
 	const { setContacts } = useContacts();
 	const { setConversations } = useConversations();
+	const { userId, setUserId } = useUser();
+	const { url } = useRouteMatch();
 
 	useEffectMounted(() => {
 		setUserId(null);
@@ -65,14 +68,14 @@ const Sidebar = ({ id, setUserId }) => {
 
 	const itemsList = [
 		{
-			text: 'Contacts',
+			text: "Contacts",
 			icon: <GroupIcon />,
-			route: '/contacts',
+			route: `${url}/contacts`,
 		},
 		{
-			text: 'Conversations',
+			text: "Conversations",
 			icon: <ChatBubbleIcon />,
-			route: '/conversations',
+			route: `${url}/conversations`,
 		},
 	];
 
@@ -82,7 +85,7 @@ const Sidebar = ({ id, setUserId }) => {
 				<Typography className={classes.drawerTitle} variant="h6">
 					Socket Messenger
 				</Typography>
-				<CopyToClipboard text={id}>
+				<CopyToClipboard text={userId}>
 					<Button
 						variant="text"
 						size="small"
@@ -91,9 +94,9 @@ const Sidebar = ({ id, setUserId }) => {
 						<Typography
 							color="textSecondary"
 							variant="subtitle2"
-							style={{ textTransform: 'none' }}
+							style={{ textTransform: "none" }}
 						>
-							ID: {id}
+							ID: {userId}
 						</Typography>
 					</Button>
 				</CopyToClipboard>
@@ -123,7 +126,7 @@ const Sidebar = ({ id, setUserId }) => {
 				<Button
 					variant="contained"
 					color="primary"
-					size="large"
+					size="medium"
 					startIcon={<ExitToAppIcon />}
 					onClick={() => signout()}
 				>

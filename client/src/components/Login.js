@@ -1,24 +1,30 @@
-import React, { useRef } from 'react';
-import { v4 as uuidV4 } from 'uuid';
+import React, { useRef } from "react";
+import { v4 as uuidV4 } from "uuid";
 import {
 	Grid,
 	TextField,
 	Button,
 	ButtonGroup,
 	Typography,
-} from '@material-ui/core';
+} from "@material-ui/core";
+import { useUser } from "../contexts/UserContext";
+import { useHistory } from "react-router-dom";
 
-const Login = ({ setUserId }) => {
+const Login = () => {
 	const idRef = useRef();
+	const { setUserId } = useUser();
+	const history = useHistory();
+	const REDIRECT_URL = "/";
 
 	function generateId() {
 		setUserId(uuidV4());
+		history.push(REDIRECT_URL);
 	}
 
 	function loginWithId(e) {
 		e.preventDefault();
-
 		setUserId(idRef.current.value);
+		history.push(REDIRECT_URL);
 	}
 
 	return (
@@ -27,10 +33,10 @@ const Login = ({ setUserId }) => {
 			alignItems="center"
 			direction="column"
 			justify="center"
-			style={{ minHeight: '100vh', minWidth: '100vw' }}
+			style={{ minHeight: "100vh", minWidth: "100vw" }}
 		>
 			<Grid item xs={12}>
-				<Typography style={{ padding: '50px' }} variant="h2">
+				<Typography style={{ padding: "50px" }} variant="h2">
 					Socket Messenger
 				</Typography>
 			</Grid>

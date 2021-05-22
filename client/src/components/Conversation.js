@@ -11,7 +11,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useContacts } from "../contexts/ContactsContext";
 import { useConversations } from "../contexts/ConversationsContext";
-import { Link } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -26,13 +26,11 @@ const Conversation = ({ id, recipients, lastMessage }) => {
 	const classes = useStyles();
 	const { idToName } = useContacts();
 	const { deleteConversation } = useConversations();
+	const { url } = useRouteMatch();
 
 	return (
 		<Card variant="outlined" className={classes.root}>
-			<CardActionArea
-				component={Link}
-				to={{ pathname: "/conversations/" + id }}
-			>
+			<CardActionArea component={Link} to={{ pathname: `${url}/${id}` }}>
 				<CardContent>
 					<Grid container spacing={2}>
 						<Grid item xs={3} className={classes.name}>

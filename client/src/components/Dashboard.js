@@ -4,12 +4,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Contacts from "./Contacts";
 import Conversations from "./Conversations";
 import Chatroom from "./Chatroom";
-import {
-	BrowserRouter as Router,
-	Switch,
-	Route,
-	Redirect,
-} from "react-router-dom";
+import { Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
+import { ContactsContextProvider } from "../contexts/ContactsContext";
+import { ConversationsContextProvider } from "../contexts/ConversationsContext";
 
 const useStyles = makeStyles({
 	root: {
@@ -17,25 +14,27 @@ const useStyles = makeStyles({
 	},
 });
 
-const Dashboard = ({ id, setUserId }) => {
+const Dashboard = () => {
 	const classes = useStyles();
+	const { url } = useRouteMatch();
 
 	return (
-		<div className={classes.root}>
-			<Router>
-				<Sidebar id={id} setUserId={setUserId} />
-				<Switch>
-					<Route exact path="/contacts" component={Contacts} />
-					<Redirect exact from="/" to="/contacts" />
-					<Route exact path="/conversations" component={Conversations} />
-					<Route
-						exact
-						path="/conversations/:conversationId"
-						component={Chatroom}
-					/>
-				</Switch>
-			</Router>
-		</div>
+		<ContactsContextProvider>
+			<ConversationsContextProvider>
+				<div className={classes.root}>
+					<Sidebar />
+					<Switch>
+						<Redirect exact from="/dashboard" to={`${url}/contacts`} />
+						<Route path={`${url}/contacts`} component={Contacts} />
+						<Route
+							path={`${url}/conversations/:conversationId`}
+							component={Chatroom}
+						/>
+						<Route path={`${url}/conversations`} component={Conversations} />
+					</Switch>
+				</div>
+			</ConversationsContextProvider>
+		</ContactsContextProvider>
 	);
 };
 

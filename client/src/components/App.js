@@ -1,21 +1,26 @@
-import React from 'react';
-import Login from './Login';
-import Dashboard from './Dashboard';
-import useLocalStorage from '../hooks/useLocalStorage';
-import { ContactsContextProvider } from '../contexts/ContactsContext';
-import { ConversationsContextProvider } from '../contexts/ConversationsContext';
+import React from "react";
+import Dashboard from "./Dashboard";
+import LoginPrivateRoute from "./LoginPrivateRoute";
+import { UserContextProvider } from "../contexts/UserContext";
+import Login from "./Login";
+import {
+	BrowserRouter as Router,
+	Switch,
+	Route,
+	Redirect,
+} from "react-router-dom";
 
 function App() {
-	const [id, setId] = useLocalStorage('id');
-
-	return id ? (
-		<ContactsContextProvider>
-			<ConversationsContextProvider>
-				<Dashboard id={id} setUserId={setId} />
-			</ConversationsContextProvider>
-		</ContactsContextProvider>
-	) : (
-		<Login setUserId={setId} />
+	return (
+		<UserContextProvider>
+			<Router>
+				<Switch>
+					<Route path="/login" component={Login} />
+					<LoginPrivateRoute path="/dashboard" component={Dashboard} />
+					<Redirect from="/" to="/dashboard" />
+				</Switch>
+			</Router>
+		</UserContextProvider>
 	);
 }
 
