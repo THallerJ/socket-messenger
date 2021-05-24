@@ -20,6 +20,10 @@ export const ConversationsContextProvider = ({ children }) => {
 		}
 	}
 
+	function idToConversation(id) {
+		return conversations.find((conversation) => conversation.id === id);
+	}
+
 	function deleteConversation(id) {
 		setConversations(
 			conversations.filter((conversation) => {
@@ -57,6 +61,7 @@ export const ConversationsContextProvider = ({ children }) => {
 	const value = {
 		conversations,
 		setConversations,
+		idToConversation,
 		createConversation,
 		deleteConversation,
 	};
