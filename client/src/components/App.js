@@ -9,18 +9,28 @@ import {
 	Route,
 	Redirect,
 } from "react-router-dom";
+import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+import { SidebarContextProvider } from "../contexts/SidebarContext";
+
+const theme = createMuiTheme({
+	drawerWidth: 240,
+});
 
 function App() {
 	return (
-		<UserContextProvider>
-			<Router>
-				<Switch>
-					<Route path="/login" component={Login} />
-					<LoginPrivateRoute path="/dashboard" component={Dashboard} />
-					<Redirect from="/" to="/dashboard" />
-				</Switch>
-			</Router>
-		</UserContextProvider>
+		<MuiThemeProvider theme={theme}>
+			<UserContextProvider>
+				<SidebarContextProvider>
+					<Router>
+						<Switch>
+							<Route path="/login" component={Login} />
+							<LoginPrivateRoute path="/dashboard" component={Dashboard} />
+							<Redirect from="/" to="/dashboard" />
+						</Switch>
+					</Router>
+				</SidebarContextProvider>
+			</UserContextProvider>
+		</MuiThemeProvider>
 	);
 }
 

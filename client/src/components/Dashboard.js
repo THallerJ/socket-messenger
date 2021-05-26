@@ -7,31 +7,81 @@ import Chatroom from "./Chatroom";
 import { Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
 import { ContactsContextProvider } from "../contexts/ContactsContext";
 import { ConversationsContextProvider } from "../contexts/ConversationsContext";
+import {
+	Typography,
+	Hidden,
+	IconButton,
+	AppBar,
+	Toolbar,
+} from "@material-ui/core";
+import MenuIcon from "@material-ui/icons/Menu";
+import { useSidebar } from "../contexts/SidebarContext";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
 	root: {
 		display: "flex",
 	},
-});
+	container: {
+		paddingTop: theme.mixins.toolbar.minHeight + theme.spacing(1),
+		width: "100%",
+	},
+
+	appBarLargeScreen: { left: theme.drawerWidth },
+}));
 
 const Dashboard = () => {
 	const classes = useStyles();
 	const { url } = useRouteMatch();
+	const { setOpenDrawer, toolbarTitle } = useSidebar();
+
+	const appBar = (
+		<div>
+			<Hidden smDown>
+				<AppBar
+					className={classes.appBarLargeScreen}
+					color="inherit"
+					position="fixed"
+				>
+					<Toolbar>
+						<Typography variant="h6">{toolbarTitle}</Typography>
+					</Toolbar>
+				</AppBar>
+			</Hidden>
+			<Hidden mdUp>
+				<AppBar color="inherit" position="fixed">
+					<Toolbar>
+						<IconButton
+							color="inherit"
+							edge="start"
+							onClick={() => setOpenDrawer(true)}
+							className={classes.menuButton}
+						>
+							<MenuIcon />
+						</IconButton>
+						<Typography variant="h6">{toolbarTitle}</Typography>
+					</Toolbar>
+				</AppBar>
+			</Hidden>
+		</div>
+	);
 
 	return (
 		<ContactsContextProvider>
 			<ConversationsContextProvider>
 				<div className={classes.root}>
 					<Sidebar />
-					<Switch>
-						<Redirect exact from="/dashboard" to={`${url}/contacts`} />
-						<Route path={`${url}/contacts`} component={Contacts} />
-						<Route
-							path={`${url}/conversations/:conversationId`}
-							component={Chatroom}
-						/>
-						<Route path={`${url}/conversations`} component={Conversations} />
-					</Switch>
+					{appBar}
+					<div className={classes.container}>
+						<Switch>
+							<Redirect exact from="/dashboard" to={`${url}/contacts`} />
+							<Route path={`${url}/contacts`} component={Contacts} />
+							<Route
+								path={`${url}/conversations/:conversationId`}
+								component={Chatroom}
+							/>
+							<Route path={`${url}/conversations`} component={Conversations} />
+						</Switch>
+					</div>
 				</div>
 			</ConversationsContextProvider>
 		</ContactsContextProvider>

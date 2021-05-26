@@ -11,24 +11,21 @@ import {
 	Button,
 	Snackbar,
 	Hidden,
-	IconButton,
 } from "@material-ui/core";
 import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
 import GroupIcon from "@material-ui/icons/Group";
 import Alert from "@material-ui/lab/Alert";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import MenuIcon from "@material-ui/icons/Menu";
 import { Link, useRouteMatch } from "react-router-dom";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { useContacts } from "../contexts/ContactsContext";
 import useEffectMounted from "../hooks/useEffectMounted";
 import { useConversations } from "../contexts/ConversationsContext";
 import { useUser } from "../contexts/UserContext";
+import { useSidebar } from "../contexts/SidebarContext";
 
 const useStyles = makeStyles((theme) => ({
-	drawer: {
-		width: 240,
-	},
+	drawer: { width: theme.drawerWidth },
 	drawerHeader: {
 		padding: theme.spacing(3),
 	},
@@ -45,12 +42,13 @@ const useStyles = makeStyles((theme) => ({
 const Sidebar = () => {
 	const classes = useStyles();
 	const [openSnackbar, setOpenSnackbar] = useState(false);
-	const [openDrawer, setOpenDrawer] = useState(false);
 	const [signOut, setSignOut] = useState(false);
 	const { setContacts } = useContacts();
 	const { setConversations } = useConversations();
 	const { userId, setUserId } = useUser();
 	const { url } = useRouteMatch();
+
+	const { openDrawer, setOpenDrawer } = useSidebar();
 
 	useEffectMounted(() => {
 		setUserId(null);
@@ -150,14 +148,6 @@ const Sidebar = () => {
 				</Drawer>
 			</Hidden>
 			<Hidden mdUp>
-				<IconButton
-					color="inherit"
-					edge="start"
-					onClick={() => setOpenDrawer(true)}
-					className={classes.menuButton}
-				>
-					<MenuIcon />
-				</IconButton>
 				<Drawer
 					className={classes.drawer}
 					anchor="left"
