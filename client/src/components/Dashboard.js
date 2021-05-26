@@ -15,7 +15,7 @@ import {
 	Toolbar,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
-import { useSidebar } from "../contexts/SidebarContext";
+import { useDashboard } from "../contexts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 const Dashboard = () => {
 	const classes = useStyles();
 	const { url } = useRouteMatch();
-	const { setOpenDrawer, toolbarTitle } = useSidebar();
+	const { setOpenDrawer, toolbarTitle } = useDashboard();
 
 	const appBar = (
 		<div>

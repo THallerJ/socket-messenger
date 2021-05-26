@@ -7,7 +7,7 @@ import { useConversations } from "../contexts/ConversationsContext";
 import Conversation from "./Conversation";
 import useEffectMounted from "../hooks/useEffectMounted";
 import { useHistory } from "react-router-dom";
-import { useSidebar } from "../contexts/SidebarContext";
+import { useDashboard } from "../contexts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -27,7 +27,7 @@ const Conversations = () => {
 	const [newConversationId, setNewConversationId] = useState();
 	const { conversations } = useConversations();
 	const history = useHistory();
-	const { setToolbarTitle } = useSidebar();
+	const { setToolbarTitle } = useDashboard();
 
 	setToolbarTitle("Conversations");
 

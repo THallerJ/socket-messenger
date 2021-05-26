@@ -22,7 +22,7 @@ import { useContacts } from "../contexts/ContactsContext";
 import useEffectMounted from "../hooks/useEffectMounted";
 import { useConversations } from "../contexts/ConversationsContext";
 import { useUser } from "../contexts/UserContext";
-import { useSidebar } from "../contexts/SidebarContext";
+import { useDashboard } from "../contexts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
 	drawer: { width: theme.drawerWidth },
@@ -45,10 +45,9 @@ const Sidebar = () => {
 	const [signOut, setSignOut] = useState(false);
 	const { setContacts } = useContacts();
 	const { setConversations } = useConversations();
+	const { openDrawer, setOpenDrawer } = useDashboard();
 	const { userId, setUserId } = useUser();
 	const { url } = useRouteMatch();
-
-	const { openDrawer, setOpenDrawer } = useSidebar();
 
 	useEffectMounted(() => {
 		setUserId(null);

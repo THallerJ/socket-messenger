@@ -7,7 +7,7 @@ import Contact from "./Contact";
 import { Grid, Typography } from "@material-ui/core";
 import ContactsHeader from "./ContactsHeader";
 import { useContacts } from "../contexts/ContactsContext";
-import { useSidebar } from "../contexts/SidebarContext";
+import { useDashboard } from "../contexts/DashboardContext";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -23,7 +23,7 @@ const Contacts = () => {
 	const classes = useStyles();
 	const [openDialog, setOpenDialog] = useState(false);
 	const { contacts } = useContacts();
-	const { setToolbarTitle } = useSidebar();
+	const { setToolbarTitle } = useDashboard();
 
 	setToolbarTitle("Contacts");
 

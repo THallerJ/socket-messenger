@@ -10,7 +10,7 @@ import {
 	Redirect,
 } from "react-router-dom";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
-import { SidebarContextProvider } from "../contexts/SidebarContext";
+import { DashboardContextProvider } from "../contexts/DashboardContext";
 
 const theme = createMuiTheme({
 	drawerWidth: 240,
@@ -20,7 +20,7 @@ function App() {
 	return (
 		<MuiThemeProvider theme={theme}>
 			<UserContextProvider>
-				<SidebarContextProvider>
+				<DashboardContextProvider>
 					<Router>
 						<Switch>
 							<Route path="/login" component={Login} />
@@ -28,7 +28,7 @@ function App() {
 							<Redirect from="/" to="/dashboard" />
 						</Switch>
 					</Router>
-				</SidebarContextProvider>
+				</DashboardContextProvider>
 			</UserContextProvider>
 		</MuiThemeProvider>
 	);
