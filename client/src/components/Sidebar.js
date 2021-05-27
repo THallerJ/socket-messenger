@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 		padding: theme.spacing(1),
 	},
 	drawerFooter: {
-		margin: theme.spacing(2),
+		margin: theme.spacing(3),
 		position: "fixed",
 		bottom: 0,
 	},
