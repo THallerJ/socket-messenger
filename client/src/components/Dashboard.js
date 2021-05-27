@@ -20,10 +20,12 @@ import { useDashboard } from "../contexts/DashboardContext";
 const useStyles = makeStyles((theme) => ({
 	root: {
 		display: "flex",
+		minHeight: "97vh",
 	},
 	container: {
 		paddingTop: theme.mixins.toolbar.minHeight + theme.spacing(1),
 		width: "100%",
+		minHeight: "100%",
 	},
 
 	appBarLargeScreen: { left: theme.drawerWidth },

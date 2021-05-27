@@ -2,13 +2,29 @@ import React from "react";
 import { useParams } from "react-router";
 import { useConversations } from "../contexts/ConversationsContext";
 import { useContacts } from "../contexts/ContactsContext";
-import { Grid, TextField, Button } from "@material-ui/core";
+import { Grid, TextField, Button, Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDashboard } from "../contexts/DashboardContext";
-
+import SendIcon from "@material-ui/icons/Send";
 const useStyles = makeStyles((theme) => ({
-	root: { width: "100%" },
-	appBarLargeScreen: { left: theme.drawerWidth },
+	root: {
+		height: "100%",
+		paddingLeft: theme.spacing(6),
+		paddingRight: theme.spacing(6),
+	},
+	chatBubbleContainer: {
+		height: "90%",
+		border: "1px solid red",
+	},
+	sendContainer: {
+		height: "10%",
+	},
+	sendButton: {
+		borderTopLeftRadius: 90,
+		borderBottomLeftRadius: 90,
+		borderTopRightRadius: 0,
+		borderBottomRightRadius: 0,
+	},
 }));
 
 const Chatroom = () => {
@@ -24,23 +40,32 @@ const Chatroom = () => {
 
 	return (
 		<div className={classes.root}>
-			<Grid container>
-				<Grid container xs={12} alignContent="flex-end">
-					<Grid item container xs={2} justify="flex-end">
-						<TextField
-							multiline
-							fullWidth
-							variant="outlined"
-							label="Type a message"
-						/>
-					</Grid>
-					<Grid item container justify="flex-end">
-						<Button variant="contained" color="primary" justify="flex-end">
+			<Box className={classes.chatBubbleContainer}></Box>
+			<Box className={classes.sendContainer}>
+				<Grid container justify="flex-end">
+					<Grid item>
+						<Button
+							className={classes.sendButton}
+							variant="contained"
+							color="primary"
+							size="large"
+							startIcon={<SendIcon />}
+						>
 							Send
 						</Button>
 					</Grid>
+					<Grid item xs={7}>
+						<Grid item></Grid>
+						<TextField
+							className={classes.sendTextfield}
+							fullWidth
+							multiline
+							variant="outlined"
+							label="Send a message"
+						/>
+					</Grid>
 				</Grid>
-			</Grid>
+			</Box>
 		</div>
 	);
 };
