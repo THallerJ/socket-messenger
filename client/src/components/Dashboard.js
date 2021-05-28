@@ -25,9 +25,7 @@ const useStyles = makeStyles((theme) => ({
 	container: {
 		paddingTop: theme.mixins.toolbar.minHeight + theme.spacing(1),
 		width: "100%",
-		minHeight: "100%",
 	},
-
 	appBarLargeScreen: { left: theme.drawerWidth },
 }));
 

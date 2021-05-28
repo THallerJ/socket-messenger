@@ -6,18 +6,19 @@ import { Grid, TextField, Button, Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDashboard } from "../contexts/DashboardContext";
 import SendIcon from "@material-ui/icons/Send";
+import ChatConversation from "./ChatConversation";
+
 const useStyles = makeStyles((theme) => ({
 	root: {
 		height: "100%",
-		paddingLeft: theme.spacing(6),
-		paddingRight: theme.spacing(6),
 	},
 	chatBubbleContainer: {
-		height: "90%",
-		border: "1px solid red",
+		height: "80vh",
+		overflow: "auto",
 	},
 	sendContainer: {
-		height: "10%",
+		paddingLeft: theme.spacing(6),
+		paddingRight: theme.spacing(6),
 	},
 	sendButton: {
 		borderTopLeftRadius: 90,
@@ -40,7 +41,9 @@ const Chatroom = () => {
 
 	return (
 		<div className={classes.root}>
-			<Box className={classes.chatBubbleContainer}></Box>
+			<Box className={classes.chatBubbleContainer}>
+				<ChatConversation />
+			</Box>
 			<Box className={classes.sendContainer}>
 				<Grid container justify="flex-end">
 					<Grid item>
