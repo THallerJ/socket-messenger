@@ -14,6 +14,9 @@ import { DashboardContextProvider } from "../contexts/DashboardContext";
 
 const theme = createMuiTheme({
 	drawerWidth: 240,
+	palette: {
+		offwhite: "#f2f3f5",
+	},
 });
 
 function App() {

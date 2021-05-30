@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
 		overflow: "auto",
 	},
 	sendContainer: {
+		paddingTop: theme.spacing(1),
 		paddingLeft: theme.spacing(6),
 		paddingRight: theme.spacing(6),
 	},
