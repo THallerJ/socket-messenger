@@ -38,7 +38,8 @@ const Chatroom = () => {
 
 	const conversation = idToConversation(conversationId);
 
-	setToolbarTitle(idToName(conversation.recipients).join(", "));
+	if (conversation !== undefined)
+		setToolbarTitle(idToName(conversation.recipients).join(", "));
 
 	return (
 		<div className={classes.root}>
