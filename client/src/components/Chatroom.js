@@ -13,13 +13,12 @@ const useStyles = makeStyles((theme) => ({
 		height: "100%",
 	},
 	chatBubbleContainer: {
-		height: "80vh",
+		height: "82vh",
 		overflow: "auto",
 	},
 	sendContainer: {
 		paddingTop: theme.spacing(1),
 		paddingLeft: theme.spacing(6),
-		paddingRight: theme.spacing(6),
 	},
 	sendButton: {
 		borderTopLeftRadius: 90,
@@ -53,7 +52,7 @@ const Chatroom = () => {
 							className={classes.sendButton}
 							variant="contained"
 							color="primary"
-							size="large"
+							size="small"
 							startIcon={<SendIcon />}
 						>
 							Send

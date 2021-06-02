@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 		marginBottom: ".7em",
 		alignItems: "flex-end",
 	},
-	chatInfo: { marginStart: "1.5em", marginEnd: "1.5em" },
+	chatInfo: { marginStart: "2em", marginEnd: "2em" },
 }));
 
 const ChatConversation = () => {
