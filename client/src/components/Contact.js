@@ -1,18 +1,18 @@
-import React from 'react';
+import React from "react";
 import {
 	Grid,
 	Typography,
 	Card,
 	CardContent,
 	IconButton,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { useContacts } from '../contexts/ContactsContext';
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { useContacts } from "../contexts/ContactsContext";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
-		width: '100%',
+		width: "100%",
 		marginLeft: theme.spacing(1),
 		marginRight: theme.spacing(1),
 		marginTop: theme.spacing(1),
@@ -30,10 +30,10 @@ const Contact = ({ name, id }) => {
 					<Grid item xs={3} className={classes.name}>
 						<Typography noWrap>{name}</Typography>
 					</Grid>
-					<Grid item xs={8}>
+					<Grid item xs={7} md={8}>
 						<Typography noWrap>{id}</Typography>
 					</Grid>
-					<Grid item xs={1}>
+					<Grid item xs={2} md={1}>
 						<IconButton onClick={() => deleteContact(id)}>
 							<DeleteIcon />
 						</IconButton>

@@ -36,10 +36,10 @@ const Conversation = ({ id, recipients, lastMessage }) => {
 						<Grid item xs={3} className={classes.name}>
 							<Typography>{idToName(recipients).join(", ")}</Typography>
 						</Grid>
-						<Grid item xs={8}>
+						<Grid item xs={7} md={8}>
 							<Typography noWrap>{lastMessage}</Typography>
 						</Grid>
-						<Grid item xs={1}>
+						<Grid item xs={2} md={1}>
 							<IconButton
 								onClick={(e) => {
 									e.stopPropagation();
