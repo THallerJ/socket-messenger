@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Fab, Grid, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
@@ -29,7 +29,9 @@ const Conversations = () => {
 	const history = useHistory();
 	const { setToolbarTitle } = useDashboard();
 
-	setToolbarTitle("Conversations");
+	useEffect(() => {
+		setToolbarTitle("Conversations");
+	});
 
 	useEffectMounted(() => {
 		history.push("conversations/" + newConversationId);

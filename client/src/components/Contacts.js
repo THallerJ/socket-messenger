@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
@@ -25,7 +25,9 @@ const Contacts = () => {
 	const { contacts } = useContacts();
 	const { setToolbarTitle } = useDashboard();
 
-	setToolbarTitle("Contacts");
+	useEffect(() => {
+		setToolbarTitle("Contacts");
+	});
 
 	const contactList = (
 		<div>

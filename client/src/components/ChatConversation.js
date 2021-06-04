@@ -58,9 +58,10 @@ const ChatConversation = () => {
 		dummyData.push({ sender: sender, message: messages[i % messages.length] });
 	}
 
-	function createChatBubble(sender, message) {
+	function createChatBubble(sender, message, key) {
 		return (
 			<div
+				key={key}
 				className={
 					sender === userId
 						? classes.positionRightSide
@@ -83,8 +84,8 @@ const ChatConversation = () => {
 
 	return (
 		<div className={classes.root}>
-			{dummyData.map((msg) => {
-				return createChatBubble(msg.sender, msg.message);
+			{dummyData.map((msg, index) => {
+				return createChatBubble(msg.sender, msg.message, index);
 			})}
 		</div>
 	);

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { useParams } from "react-router";
 import { useConversations } from "../contexts/ConversationsContext";
 import { useContacts } from "../contexts/ContactsContext";
@@ -38,8 +38,11 @@ const Chatroom = () => {
 
 	const conversation = idToConversation(conversationId);
 
-	if (conversation !== undefined)
-		setToolbarTitle(idToName(conversation.recipients).join(", "));
+	useEffect(() => {
+		if (conversation !== undefined) {
+			setToolbarTitle(idToName(conversation.recipients).join(", "));
+		}
+	});
 
 	function handleSubmit() {
 		console.log(textfieldRef.current.value);
