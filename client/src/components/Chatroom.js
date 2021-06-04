@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useParams } from "react-router";
 import { useConversations } from "../contexts/ConversationsContext";
 import { useContacts } from "../contexts/ContactsContext";
@@ -34,11 +34,16 @@ const Chatroom = () => {
 	const { idToConversation } = useConversations();
 	const { idToName } = useContacts();
 	const { setToolbarTitle } = useDashboard();
+	const textfieldRef = useRef();
 
 	const conversation = idToConversation(conversationId);
 
 	if (conversation !== undefined)
 		setToolbarTitle(idToName(conversation.recipients).join(", "));
+
+	function handleSubmit() {
+		console.log(textfieldRef.current.value);
+	}
 
 	return (
 		<div className={classes.root}>
@@ -53,6 +58,7 @@ const Chatroom = () => {
 							variant="contained"
 							color="primary"
 							size="small"
+							onClick={handleSubmit}
 							startIcon={<SendIcon />}
 						>
 							Send
@@ -62,10 +68,11 @@ const Chatroom = () => {
 						<Grid item></Grid>
 						<TextField
 							className={classes.sendTextfield}
+							inputRef={textfieldRef}
 							fullWidth
 							multiline
 							variant="outlined"
-							label="Send a message"
+							placeholder="Send a message"
 						/>
 					</Grid>
 				</Grid>
