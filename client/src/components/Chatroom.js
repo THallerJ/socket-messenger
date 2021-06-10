@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 const Chatroom = () => {
 	const classes = useStyles();
 	const { conversationId } = useParams();
-	const { idToConversation } = useConversations();
+	const { idToConversation, sendMessage } = useConversations();
 	const { idToName } = useContacts();
 	const { setToolbarTitle } = useDashboard();
 	const textfieldRef = useRef();
@@ -45,7 +45,7 @@ const Chatroom = () => {
 	});
 
 	function handleSubmit() {
-		console.log(textfieldRef.current.value);
+		sendMessage(conversation.recipients, textfieldRef.current.value);
 	}
 
 	return (

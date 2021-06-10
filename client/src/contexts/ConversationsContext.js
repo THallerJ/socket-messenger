@@ -1,6 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { v4 as uuidV4 } from "uuid";
+import io from "socket.io-client";
+import { useUser } from "../contexts/UserContext";
+
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 const ConversationsContext = React.createContext();
 
@@ -9,6 +13,12 @@ export const ConversationsContextProvider = ({ children }) => {
 		"conversations",
 		[]
 	);
+	const { userId } = useUser();
+	const [socket, setSocket] = useState();
+
+	useEffect(() => {
+		setSocket(io(SERVER_URL, { query: { userId } }));
+	}, [userId]);
 
 	function compareArrays(a, b) {
 		if (a.length !== b.length) {
@@ -58,12 +68,25 @@ export const ConversationsContextProvider = ({ children }) => {
 		return conversationId;
 	}
 
+	function sendMessage(recipients, message) {
+		socket.emit("send-message", { recipients, message });
+	}
+
+	useEffect(() => {
+		if (socket != null) {
+			socket.on("message-recieved", (msg) => {
+				console.log(msg);
+			});
+		}
+	}, [socket]);
+
 	const value = {
 		conversations,
 		setConversations,
 		idToConversation,
 		createConversation,
 		deleteConversation,
+		sendMessage,
 	};
 
 	return (
