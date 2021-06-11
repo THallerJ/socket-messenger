@@ -17,7 +17,7 @@ export const ConversationsContextProvider = ({ children }) => {
 	const [socket, setSocket] = useState();
 
 	useEffect(() => {
-		setSocket(io(SERVER_URL, { query: { userId } }));
+		setSocket(io(SERVER_URL, { query: { userId: userId } }));
 	}, [userId]);
 
 	function compareArrays(a, b) {
