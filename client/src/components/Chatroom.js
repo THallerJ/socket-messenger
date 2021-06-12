@@ -46,6 +46,7 @@ const Chatroom = () => {
 
 	function handleSubmit() {
 		sendMessage(conversation.recipients, textfieldRef.current.value);
+		textfieldRef.current.value = "";
 	}
 
 	return (
