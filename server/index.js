@@ -8,16 +8,21 @@ const io = require("socket.io")(server, {
 
 io.on("connection", (socket) => {
 	const id = socket.handshake.query.userId;
-	console.log("id:", id);
 	socket.join(id);
 
-	console.log("client connected to server");
 	socket.on("send-message", ({ recipients, message }) => {
-		console.log("Message recieved on server:", message);
+		const tempRecipients = [...recipients];
+		recipients.push(id); // add sender's id to list of recipients
 
-		recipients.forEach((recipient) => {
-			console.log("recipient id:", recipient);
-			io.to(recipient).emit("message-recieved", message);
+		tempRecipients.forEach((recipient) => {
+			// remove the recipient who is recieving the message from the recipient array
+			const newRecipients = recipients.filter((sentTo) => sentTo !== recipient);
+			const msg = { sender: id, message: message };
+
+			io.to(recipient).emit("message-recieved", {
+				recipients: newRecipients,
+				message: msg,
+			});
 		});
 	});
 });
