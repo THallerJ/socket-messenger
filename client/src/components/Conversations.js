@@ -24,8 +24,7 @@ const Conversations = () => {
 	const classes = useStyles();
 
 	const [openDialog, setOpenDialog] = useState(false);
-	const [newConversationId, setNewConversationId] = useState();
-	const { conversations } = useConversations();
+	const { conversations, currentConversationId } = useConversations();
 	const history = useHistory();
 	const { setToolbarTitle } = useDashboard();
 
@@ -34,12 +33,8 @@ const Conversations = () => {
 	});
 
 	useEffectMounted(() => {
-		history.push("conversations/" + newConversationId);
-	}, [newConversationId]);
-
-	function dialogCallback(id) {
-		setNewConversationId(id);
-	}
+		history.push("conversations/" + currentConversationId);
+	}, [currentConversationId]);
 
 	const conversationList = (
 		<div>
@@ -82,11 +77,7 @@ const Conversations = () => {
 
 	return (
 		<div className={classes.root}>
-			<CreateConversationDialog
-				open={openDialog}
-				setOpen={setOpenDialog}
-				callback={dialogCallback}
-			/>
+			<CreateConversationDialog open={openDialog} setOpen={setOpenDialog} />
 			{conversations.length > 0 ? conversationList : emptyConversationtList}
 			<Fab
 				className={classes.fab}

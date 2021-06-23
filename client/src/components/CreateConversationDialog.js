@@ -33,7 +33,7 @@ const AddConversationDialog = ({ open, setOpen, callback }) => {
 	const classes = useStyles();
 
 	const { contacts } = useContacts();
-	const { createConversation } = useConversations();
+	const { createOrUpdateConversation } = useConversations();
 
 	const [contactChecked, setContactChecked] = useState(
 		contacts.slice().fill(false)
@@ -47,8 +47,7 @@ const AddConversationDialog = ({ open, setOpen, callback }) => {
 
 		setContactChecked(contacts.slice().fill(false));
 
-		// creates a conversation and sends the conversation id to the callback
-		callback(createConversation(contactsInConversation));
+		createOrUpdateConversation(contactsInConversation, []);
 		setOpen(false);
 	}
 
