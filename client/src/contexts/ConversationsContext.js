@@ -11,7 +11,7 @@ const ConversationsContext = React.createContext();
 export const ConversationsContextProvider = ({ children }) => {
 	const [conversations, setConversations] = useLocalStorage(
 		"conversations",
-		[]
+		null
 	);
 	const { userId } = useUser();
 	const [socket, setSocket] = useState();
@@ -21,55 +21,42 @@ export const ConversationsContextProvider = ({ children }) => {
 		setSocket(io(SERVER_URL, { query: { userId: userId } }));
 	}, [userId]);
 
-	// TODO: remove function and place code in createOrUpdateConversation
-	const findConversation = useCallback(
-		(recipients) => {
-			return conversations.findIndex((conversation) => {
-				return compareArrays(conversation.recipients, recipients);
-			});
-		},
-		[conversations]
-	);
-
 	useEffect(() => {
 		console.log("conversation:", conversations);
 	}, [conversations]);
 
 	const createOrUpdateConversation = useCallback(
 		(recipients, message) => {
-			const conversationIndex = findConversation(recipients);
+			setConversations((state) => {
+				const conversationIndex = state.findIndex((conversation) =>
+					compareArrays(conversation.recipients, recipients)
+				);
 
-			var conversationId;
-			if (conversationIndex < 0) {
-				// create new conversation add message to the conversation's messages array
-				conversationId = uuidV4();
-				const msgArray = message === undefined ? [] : new Array(message);
-				const newConversation = {
-					id: conversationId,
-					recipients: recipients,
-					messages: msgArray,
-				};
+				if (conversationIndex < 0) {
+					// create new conversation add message to the conversation's messages array
+					const conversationId = uuidV4();
+					const msgArray = message === undefined ? [] : new Array(message);
+					const newConversation = {
+						id: conversationId,
+						recipients: recipients,
+						messages: msgArray,
+					};
 
-				setConversations((current) => [...current, newConversation]);
-			} else {
-				// add message to the existing conversation's messages array
-				//conversationExists.messages.push(message);
-				//console.log("exists", conversationExists);
-				//conversationId = conversationExists.id;
-				/*
-				setConversations((current) => {
-					return [
-						...current.slice(0, conversationIndex),
-						current[conversationIndex].messages.push(message),
-						...current.slice(conversationIndex + 1),
-					];
-				});
-							*/
-			}
+					setCurretConversationId(conversationId);
+					return [...state, newConversation];
+				} else {
+					// add message to the existing conversation's messages array
+					const temp = [...state];
+					const tempElem = { ...temp[conversationIndex] };
+					tempElem.messages = [...tempElem.messages, message];
+					temp[conversationIndex] = tempElem;
 
-			setCurretConversationId(conversationId);
+					setCurretConversationId(state[conversationIndex].id);
+					return temp;
+				}
+			});
 		},
-		[setConversations, findConversation]
+		[setConversations]
 	);
 
 	useEffect(() => {
@@ -103,6 +90,7 @@ export const ConversationsContextProvider = ({ children }) => {
 	}
 
 	function sendMessage(recipients, message) {
+		createOrUpdateConversation(recipients, message);
 		socket.emit("send-message", { recipients, message });
 	}
 
