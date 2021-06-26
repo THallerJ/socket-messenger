@@ -11,7 +11,7 @@ const ConversationsContext = React.createContext();
 export const ConversationsContextProvider = ({ children }) => {
 	const [conversations, setConversations] = useLocalStorage(
 		"conversations",
-		null
+		[]
 	);
 	const { userId } = useUser();
 	const [socket, setSocket] = useState();
@@ -48,7 +48,11 @@ export const ConversationsContextProvider = ({ children }) => {
 					// add message to the existing conversation's messages array
 					const temp = [...state];
 					const tempElem = { ...temp[conversationIndex] };
-					tempElem.messages = [...tempElem.messages, message];
+
+					tempElem.messages = compareArrays(state, [])
+						? new Array(message)
+						: [...tempElem.messages, message];
+
 					temp[conversationIndex] = tempElem;
 
 					setCurretConversationId(state[conversationIndex].id);
