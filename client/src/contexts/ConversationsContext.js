@@ -94,7 +94,9 @@ export const ConversationsContextProvider = ({ children }) => {
 	}
 
 	function sendMessage(recipients, message) {
-		createOrUpdateConversation(recipients, message);
+		const formattedMessage = { sender: userId, text: message };
+
+		createOrUpdateConversation(recipients, formattedMessage);
 		socket.emit("send-message", { recipients, message });
 	}
 
