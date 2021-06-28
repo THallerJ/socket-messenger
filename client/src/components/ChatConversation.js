@@ -40,23 +40,10 @@ const useStyles = makeStyles((theme) => ({
 	chatInfo: { marginStart: "2em", marginEnd: "2em" },
 }));
 
-const ChatConversation = () => {
+const ChatConversation = ({ messages }) => {
 	const classes = useStyles();
 	const { userId } = useUser();
 	const { idToName } = useContacts();
-	var dummyData = [];
-
-	const messages = [
-		"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
-		"Sed ut perspiciatis",
-		"omnis iste natus error sit voluptatem accusantium doloremque",
-		"minima ",
-	];
-
-	for (var i = 0; i < 40; i++) {
-		const sender = i % 2 === 0 ? "123" : userId;
-		dummyData.push({ sender: sender, message: messages[i % messages.length] });
-	}
 
 	function createChatBubble(sender, message, key) {
 		return (
@@ -84,9 +71,13 @@ const ChatConversation = () => {
 
 	return (
 		<div className={classes.root}>
-			{dummyData.map((msg, index) => {
-				return createChatBubble(msg.sender, msg.message, index);
-			})}
+			{messages === undefined || messages.length === 0 ? (
+				<Typography>No Messages</Typography>
+			) : (
+				messages.map((msg, index) => {
+					return createChatBubble(msg.sender, msg.text, index);
+				})
+			)}
 		</div>
 	);
 };

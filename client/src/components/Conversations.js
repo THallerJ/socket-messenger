@@ -46,7 +46,9 @@ const Conversations = () => {
 							id={conversation.id}
 							recipients={conversation.recipients}
 							lastMessage={
-								conversation.messages[conversation.messages.length - 1].text
+								conversation.messages.length > 0
+									? conversation.messages[conversation.messages.length - 1].text
+									: ""
 							}
 						/>
 					);

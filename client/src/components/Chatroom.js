@@ -35,7 +35,6 @@ const Chatroom = () => {
 	const { idToName } = useContacts();
 	const { setToolbarTitle } = useDashboard();
 	const textfieldRef = useRef();
-
 	const conversation = idToConversation(conversationId);
 
 	useEffect(() => {
@@ -52,7 +51,11 @@ const Chatroom = () => {
 	return (
 		<div className={classes.root}>
 			<Box className={classes.chatBubbleContainer}>
-				<ChatConversation />
+				<ChatConversation
+					messages={
+						conversation === undefined ? undefined : conversation.messages
+					}
+				/>
 			</Box>
 			<Box className={classes.sendContainer}>
 				<Grid container justify="flex-end">
