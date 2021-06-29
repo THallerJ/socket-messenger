@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
 		width: "100%",
 	},
 	userBubble: {
-		borderRadius: "20px",
+		borderRadius: "15px",
 		width: "40%",
 		padding: ".75em",
 		marginLeft: ".4em",
@@ -62,7 +62,7 @@ const ChatConversation = ({ messages }) => {
 				>
 					{message}
 				</Typography>
-				<Typography className={classes.chatInfo} variant="caption">
+				<Typography noWrap className={classes.chatInfo} variant="caption">
 					{sender === userId ? "Me" : idToName([sender])}
 				</Typography>
 			</div>
@@ -71,13 +71,11 @@ const ChatConversation = ({ messages }) => {
 
 	return (
 		<div className={classes.root}>
-			{messages === undefined || messages.length === 0 ? (
-				<Typography>No Messages</Typography>
-			) : (
-				messages.map((msg, index) => {
-					return createChatBubble(msg.sender, msg.text, index);
-				})
-			)}
+			{messages === undefined || messages.length === 0
+				? ""
+				: messages.map((msg, index) => {
+						return createChatBubble(msg.sender, msg.text, index);
+				  })}
 		</div>
 	);
 };
