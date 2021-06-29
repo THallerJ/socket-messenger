@@ -43,7 +43,9 @@ const Dashboard = () => {
 					position="fixed"
 				>
 					<Toolbar>
-						<Typography variant="h6">{toolbarTitle}</Typography>
+						<Typography noWrap variant="h6">
+							{toolbarTitle}
+						</Typography>
 					</Toolbar>
 				</AppBar>
 			</Hidden>
@@ -58,7 +60,9 @@ const Dashboard = () => {
 						>
 							<MenuIcon />
 						</IconButton>
-						<Typography variant="h6">{toolbarTitle}</Typography>
+						<Typography noWrap variant="h6">
+							{toolbarTitle}
+						</Typography>
 					</Toolbar>
 				</AppBar>
 			</Hidden>
