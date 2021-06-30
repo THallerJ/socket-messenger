@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography } from "@material-ui/core";
+import { Typography, Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useUser } from "../contexts/UserContext";
 import { useContacts } from "../contexts/ContactsContext";
@@ -44,7 +44,7 @@ const ChatConversation = ({ messages }) => {
 	const classes = useStyles();
 	const { userId } = useUser();
 	const { idToName } = useContacts();
-
+	/// TODO EITHER ADD PADDING TO RIGHT SIDE BUBBLE OR REMOVE PAADING AROUND BOX ON LEFT
 	function createChatBubble(sender, message, key) {
 		return (
 			<div
@@ -62,9 +62,23 @@ const ChatConversation = ({ messages }) => {
 				>
 					{message}
 				</Typography>
-				<Typography noWrap className={classes.chatInfo} variant="caption">
-					{sender === userId ? "Me" : idToName([sender])}
-				</Typography>
+
+				{sender === userId ? (
+					<Typography noWrap className={classes.chatInfo} variant="caption">
+						{sender === userId ? "Me" : idToName([sender])}
+					</Typography>
+				) : (
+					<Box
+						component="div"
+						overflow="hidden"
+						textOverflow="ellipsis"
+						width={"30%"}
+					>
+						<Typography noWrap className={classes.chatInfo} variant="caption">
+							{sender === userId ? "Me" : idToName([sender])}
+						</Typography>
+					</Box>
+				)}
 			</div>
 		);
 	}
