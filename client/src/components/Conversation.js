@@ -34,7 +34,7 @@ const Conversation = ({ id, recipients, lastMessage }) => {
 				<CardContent>
 					<Grid container spacing={2}>
 						<Grid item xs={3} className={classes.name}>
-							<Typography>{idToName(recipients).join(", ")}</Typography>
+							<Typography noWrap>{idToName(recipients).join(", ")}</Typography>
 						</Grid>
 						<Grid item xs={7} md={8}>
 							<Typography noWrap>{lastMessage}</Typography>
