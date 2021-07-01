@@ -13,16 +13,16 @@ io.on("connection", (socket) => {
 	socket.on("send-message", ({ recipients, message }) => {
 		const tempRecipients = [...recipients];
 		recipients.push(id); // add sender's id to list of recipients
+		console.log(message);
 
 		tempRecipients.forEach((recipient) => {
 			// remove the recipient who is recieving the message from the recipient array
 			const newRecipients = recipients.filter((sentTo) => sentTo !== recipient);
-			const msg = { sender: id, text: message };
-			console.log("emitted");
+			//const msg = { sender: id, text: message };
 
 			io.to(recipient).emit("message-recieved", {
 				recipients: newRecipients,
-				message: msg,
+				message: message,
 			});
 		});
 	});

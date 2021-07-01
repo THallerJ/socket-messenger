@@ -44,28 +44,70 @@ const ChatConversation = ({ messages }) => {
 	const classes = useStyles();
 	const { userId } = useUser();
 	const { idToName } = useContacts();
-	/// TODO EITHER ADD PADDING TO RIGHT SIDE BUBBLE OR REMOVE PAADING AROUND BOX ON LEFT
-	function createChatBubble(sender, message, key) {
+
+	function getDateTimetring(date) {
+		const days = [
+			"Sunday",
+			"Monday",
+			"Tuesday",
+			"Wednesday",
+			"Thursday",
+			"Friday",
+			"Saturday",
+		];
+
+		const months = [
+			"January",
+			"February",
+			"March",
+			"April",
+			"May",
+			"June",
+			"July",
+			"August",
+			"September",
+			"October",
+			"November",
+			"December",
+		];
+
+		const day = days[date.getDay()];
+		const month = months[date.getMonth()];
+		const minutes =
+			date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+
+		const hour = date.getHours() < 12 ? date.getHours() : date.getHours() - 12;
+		const amOrPm = date.getHours() < 12 ? "AM" : "PM";
+
+		return `${day}, ${month} ${date.getDate()} | ${hour}:${minutes} ${amOrPm}`;
+	}
+
+	function createChatBubble(message, key) {
+		const date = new Date(message.date);
+
 		return (
 			<div
 				key={key}
 				className={
-					sender === userId
+					message.sender === userId
 						? classes.positionRightSide
 						: classes.positionLeftSide
 				}
 			>
+				<Typography>{getDateTimetring(date)}</Typography>
 				<Typography
 					className={
-						sender === userId ? classes.userBubble : classes.otherUserBubble
+						message.sender === userId
+							? classes.userBubble
+							: classes.otherUserBubble
 					}
 				>
-					{message}
+					{message.text}
 				</Typography>
 
-				{sender === userId ? (
+				{message.sender === userId ? (
 					<Typography noWrap className={classes.chatInfo} variant="caption">
-						{sender === userId ? "Me" : idToName([sender])}
+						{message.sender === userId ? "Me" : idToName([message.sender])}
 					</Typography>
 				) : (
 					<Box
@@ -75,7 +117,7 @@ const ChatConversation = ({ messages }) => {
 						width={"30%"}
 					>
 						<Typography noWrap className={classes.chatInfo} variant="caption">
-							{sender === userId ? "Me" : idToName([sender])}
+							{message.sender === userId ? "Me" : idToName([message.sender])}
 						</Typography>
 					</Box>
 				)}
@@ -88,7 +130,7 @@ const ChatConversation = ({ messages }) => {
 			{messages === undefined || messages.length === 0
 				? ""
 				: messages.map((msg, index) => {
-						return createChatBubble(msg.sender, msg.text, index);
+						return createChatBubble(msg, index);
 				  })}
 		</div>
 	);
