@@ -18,7 +18,6 @@ io.on("connection", (socket) => {
 		tempRecipients.forEach((recipient) => {
 			// remove the recipient who is recieving the message from the recipient array
 			const newRecipients = recipients.filter((sentTo) => sentTo !== recipient);
-			//const msg = { sender: id, text: message };
 
 			io.to(recipient).emit("message-recieved", {
 				recipients: newRecipients,
