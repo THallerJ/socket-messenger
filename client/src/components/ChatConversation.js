@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, Box } from "@material-ui/core";
+import { Typography, Box, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useUser } from "../contexts/UserContext";
 import { useContacts } from "../contexts/ContactsContext";
@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
 		alignItems: "flex-end",
 	},
 	chatInfo: { marginStart: "2em", marginEnd: "2em" },
+	dateTime: { paddingBottom: "1.2em" },
 }));
 
 const ChatConversation = ({ messages }) => {
@@ -82,8 +83,13 @@ const ChatConversation = ({ messages }) => {
 		return `${day}, ${month} ${date.getDate()} | ${hour}:${minutes} ${amOrPm}`;
 	}
 
-	function createChatBubble(message, key) {
+	function createChatBubble(message, prevDateTime, key) {
 		const date = new Date(message.date);
+		const prevDate = prevDateTime ? new Date(prevDateTime) : null;
+
+		const timeDifference = prevDate
+			? date.getTime() - prevDate.getTime()
+			: null;
 
 		return (
 			<div
@@ -94,7 +100,20 @@ const ChatConversation = ({ messages }) => {
 						: classes.positionLeftSide
 				}
 			>
-				<Typography>{getDateTimetring(date)}</Typography>
+				{/* display date time information if there is more than 10 minutes between  concurrent messages being sent */}
+				{timeDifference >= 60000 * 10 || !timeDifference ? (
+					<Grid
+						container
+						direction="column"
+						alignItems="center"
+						justify="center"
+					>
+						<Typography className={classes.dateTime} variant="caption">
+							{getDateTimetring(date)}
+						</Typography>
+					</Grid>
+				) : null}
+
 				<Typography
 					className={
 						message.sender === userId
@@ -104,7 +123,6 @@ const ChatConversation = ({ messages }) => {
 				>
 					{message.text}
 				</Typography>
-
 				{message.sender === userId ? (
 					<Typography noWrap className={classes.chatInfo} variant="caption">
 						{message.sender === userId ? "Me" : idToName([message.sender])}
@@ -130,7 +148,8 @@ const ChatConversation = ({ messages }) => {
 			{messages === undefined || messages.length === 0
 				? ""
 				: messages.map((msg, index) => {
-						return createChatBubble(msg, index);
+						const prevMsg = index > 0 ? messages[index - 1] : null;
+						return createChatBubble(msg, prevMsg ? prevMsg.date : null, index);
 				  })}
 		</div>
 	);
