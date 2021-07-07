@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Typography, Box, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useUser } from "../contexts/UserContext";
@@ -83,6 +83,13 @@ const ChatConversation = ({ messages }) => {
 		return `${day}, ${month} ${date.getDate()} | ${hour}:${minutes} ${amOrPm}`;
 	}
 
+	// when the component is overflowing, this automatically scrolls to the bottom when a new message is added
+	function ScrollToBottom() {
+		const elementRef = useRef();
+		useEffect(() => elementRef.current.scrollIntoView());
+		return <div ref={elementRef} />;
+	}
+
 	function createChatBubble(message, prevDateTime, key) {
 		const date = new Date(message.date);
 		const prevDate = prevDateTime ? new Date(prevDateTime) : null;
@@ -139,6 +146,7 @@ const ChatConversation = ({ messages }) => {
 						</Typography>
 					</Box>
 				)}
+				<ScrollToBottom />
 			</div>
 		);
 	}
