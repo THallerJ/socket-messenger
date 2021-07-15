@@ -44,7 +44,11 @@ const Chatroom = () => {
 	});
 
 	function handleSubmit() {
-		sendMessage(conversation.recipients, textfieldRef.current.value);
+		sendMessage(
+			conversation.id,
+			conversation.recipients,
+			textfieldRef.current.value
+		);
 		textfieldRef.current.value = "";
 	}
 

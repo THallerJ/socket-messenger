@@ -94,8 +94,9 @@ export const ConversationsContextProvider = ({ children }) => {
 		);
 	}
 
-	function sendMessage(recipients, message) {
+	function sendMessage(conversationId, recipients, message) {
 		const formattedMessage = {
+			conversationId: conversationId,
 			sender: userId,
 			date: Date.now(),
 			text: message,

@@ -5,15 +5,27 @@ const io = require("socket.io")(server, {
 		origin: "*",
 	},
 });
+const Pool = require("pg").Pool;
+require("dotenv").config();
+
+const pool = new Pool({
+	user: process.env.POSTGRES_USER,
+	password: process.env.POSTGRES_PASSWORD,
+	host: process.env.POSTGRES_HOST,
+	port: process.env.POSTGRES_PORT,
+	database: process.env.POSTGRES_DATABASE,
+});
 
 io.on("connection", (socket) => {
 	const id = socket.handshake.query.userId;
 	socket.join(id);
-	console.log(io.sockets.adapter.rooms);
+	checkSavedMessages(id);
 
-	socket.on("send-message", ({ recipients, message }) => {
+	socket.on("send-message", ({ message, recipients }) => {
 		const tempRecipients = [...recipients];
 		recipients.push(id); // add sender's id to list of recipients
+
+		saveMessage(message, tempRecipients);
 
 		tempRecipients.forEach((recipient) => {
 			// remove the recipient who is recieving the message from the recipient array
@@ -28,8 +40,43 @@ io.on("connection", (socket) => {
 
 	socket.on("message-recieved-callback", () => {
 		console.log("message recieved by client");
+		// delete messages
 	});
 });
+
+async function checkSavedMessages(id) {
+	const result = await pool.query(
+		"SELECT sender_id, date, text from messages, conversations WHERE message = mes_id AND recipient = $1",
+		[id]
+	);
+	console.log(result.rows);
+}
+
+async function saveMessage(message, recipients) {
+	var messageId;
+	try {
+		const result = await pool.query(
+			`INSERT INTO messages(sender_id, date, text) VALUES($1, to_timestamp($2), $3) RETURNING mes_id`,
+			[message.sender, message.date / 1000, message.text]
+		);
+		messageId = result.rows[0].mes_id;
+	} catch (e) {
+		console.log(e);
+	}
+
+	Promise.all(
+		recipients.map(async (recipient) => {
+			try {
+				const result = await pool.query(
+					"INSERT INTO conversations(conversation_id, recipient, message) VALUES($1, $2, $3)",
+					[message.conversationId, recipient, messageId]
+				);
+			} catch (e) {
+				console.log(e);
+			}
+		})
+	);
+}
 
 server.listen(5000, () => {
 	console.log("listening at port: 5000");
