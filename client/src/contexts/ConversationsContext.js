@@ -67,7 +67,11 @@ export const ConversationsContextProvider = ({ children }) => {
 		if (socket != null) {
 			socket.on("message-recieved", (msg) => {
 				createOrUpdateConversation(msg.recipients, msg.message);
-				socket.emit("message-recieved-callback");
+				console.log("gotit", msg.messageId);
+				socket.emit("message-recieved-callback", {
+					messageId: msg.messageId,
+					userId,
+				});
 			});
 		}
 	}, [socket, createOrUpdateConversation]);

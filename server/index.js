@@ -21,26 +21,26 @@ io.on("connection", (socket) => {
 	socket.join(id);
 	checkSavedMessages(id);
 
-	socket.on("send-message", ({ message, recipients }) => {
+	socket.on("send-message", async ({ message, recipients }) => {
 		const tempRecipients = [...recipients];
 		recipients.push(id); // add sender's id to list of recipients
 
-		saveMessage(message, tempRecipients);
+		const messageId = await saveMessage(message, tempRecipients);
 
 		tempRecipients.forEach((recipient) => {
 			// remove the recipient who is recieving the message from the recipient array
 			const newRecipients = recipients.filter((sentTo) => sentTo !== recipient);
 
 			io.to(recipient).emit("message-recieved", {
+				messageId: messageId, // used in the message-recieved callback
 				recipients: newRecipients,
 				message: message,
 			});
 		});
 	});
 
-	socket.on("message-recieved-callback", () => {
-		console.log("message recieved by client");
-		// delete messages
+	socket.on("message-recieved-callback", ({ messageId, userId }) => {
+		deleteMessage(messageId, userId);
 	});
 });
 
@@ -49,7 +49,7 @@ async function checkSavedMessages(id) {
 		"SELECT sender_id, date, text from messages, conversations WHERE message = mes_id AND recipient = $1",
 		[id]
 	);
-	console.log(result.rows);
+	//console.log(result.rows);
 }
 
 async function saveMessage(message, recipients) {
@@ -67,7 +67,7 @@ async function saveMessage(message, recipients) {
 	Promise.all(
 		recipients.map(async (recipient) => {
 			try {
-				const result = await pool.query(
+				await pool.query(
 					"INSERT INTO conversations(conversation_id, recipient, message) VALUES($1, $2, $3)",
 					[message.conversationId, recipient, messageId]
 				);
@@ -75,6 +75,15 @@ async function saveMessage(message, recipients) {
 				console.log(e);
 			}
 		})
+	);
+
+	return messageId;
+}
+
+async function deleteMessage(messageId, userId) {
+	await pool.query(
+		"DELETE FROM conversations WHERE message = $1 AND recipient = $2",
+		[messageId, userId]
 	);
 }
 
