@@ -3,6 +3,7 @@ import useLocalStorage from "../hooks/useLocalStorage";
 import { v4 as uuidV4 } from "uuid";
 import io from "socket.io-client";
 import { useUser } from "../contexts/UserContext";
+import useEffectMounted from "../hooks/useEffectMounted";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
@@ -63,18 +64,17 @@ export const ConversationsContextProvider = ({ children }) => {
 		[setConversations]
 	);
 
-	useEffect(() => {
+	useEffectMounted(() => {
 		if (socket != null) {
 			socket.on("message-recieved", (msg) => {
 				createOrUpdateConversation(msg.recipients, msg.message);
-				console.log("gotit", msg.messageId);
 				socket.emit("message-recieved-callback", {
 					messageId: msg.messageId,
 					userId,
 				});
 			});
 		}
-	}, [socket, createOrUpdateConversation]);
+	}, [socket, userId, createOrUpdateConversation]);
 
 	function compareArrays(a, b) {
 		if (a.length !== b.length) {
