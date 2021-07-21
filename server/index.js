@@ -19,13 +19,53 @@ const pool = new Pool({
 io.on("connection", (socket) => {
 	const id = socket.handshake.query.userId;
 	socket.join(id);
-	checkSavedMessages(id);
+
+	checkSavedMessages(id).then((messages) => {
+		try {
+			if (messages != undefined) {
+				messages.map((msg) => {
+					pool
+						.query(
+							"SELECT conversation_id FROM conversations WHERE message=$1 AND recipient=$2",
+							[msg.mes_id, id]
+						)
+						.then(async (result) => {
+							/* need to get all recipients of message 
+						format output as :
+						messageId msg.mes_id
+						recipientList: recipients
+						msg: 
+							conversationid result.rows[0].conversation_id
+							date msg
+							sender msg
+							text msg
+						*/
+
+							const conversationId = result.rows[0].conversation_id;
+
+							const recipients = await pool.query(
+								"SELECT recipient FROM conversations WHERE conversation_id=$1 AND message=$2",
+								[conversationId, msg.mes_id]
+							);
+
+							// need to handle deleting sender from conversation table when conversation is gone
+							// run select query to see if conversation_id appears only once in table, if it does then delete it
+							console.log(recipients);
+
+							//io.to(id).emit("message-recieved", {});
+						});
+				});
+			}
+		} catch (e) {
+			console.log(e);
+		}
+	});
 
 	socket.on("send-message", async ({ message, recipients }) => {
 		const tempRecipients = [...recipients];
 		recipients.push(id); // add sender's id to list of recipients
 
-		const messageId = await saveMessage(message, tempRecipients);
+		const messageId = await saveMessage(message, id, recipients);
 
 		tempRecipients.forEach((recipient) => {
 			// remove the recipient who is recieving the message from the recipient array
@@ -45,14 +85,19 @@ io.on("connection", (socket) => {
 });
 
 async function checkSavedMessages(id) {
-	const result = await pool.query(
-		"SELECT sender_id, date, text from messages, conversations WHERE message = mes_id AND recipient = $1",
-		[id]
-	);
-	//console.log(result.rows);
+	try {
+		const result = await pool.query(
+			"SELECT mes_id, sender_id, date, text from messages, conversations WHERE message=mes_id AND recipient=$1",
+			[id]
+		);
+
+		return result.rows;
+	} catch (e) {
+		console.log(e);
+	}
 }
 
-async function saveMessage(message, recipients) {
+async function saveMessage(message, senderId, recipients) {
 	var messageId;
 	try {
 		const result = await pool.query(
@@ -60,31 +105,40 @@ async function saveMessage(message, recipients) {
 			[message.sender, message.date / 1000, message.text]
 		);
 		messageId = result.rows[0].mes_id;
+
+		Promise.all(
+			recipients.map(async (recipient) => {
+				await pool.query(
+					"INSERT INTO conversations(conversation_id, recipient, message) VALUES($1, $2, $3)",
+					[
+						message.conversationId,
+						recipient,
+						recipient === senderId ? null : messageId,
+					]
+				);
+			})
+		);
 	} catch (e) {
 		console.log(e);
 	}
-
-	Promise.all(
-		recipients.map(async (recipient) => {
-			try {
-				await pool.query(
-					"INSERT INTO conversations(conversation_id, recipient, message) VALUES($1, $2, $3)",
-					[message.conversationId, recipient, messageId]
-				);
-			} catch (e) {
-				console.log(e);
-			}
-		})
-	);
 
 	return messageId;
 }
 
 async function deleteMessage(messageId, userId) {
-	await pool.query(
-		"DELETE FROM conversations WHERE message = $1 AND recipient = $2",
-		[messageId, userId]
-	);
+	try {
+		await pool.query(
+			"DELETE FROM conversations WHERE message=$1 AND recipient=$2",
+			[messageId, userId]
+		);
+
+		await pool.query(
+			"DELETE FROM messages WHERE mes_id=$1 AND NOT EXISTS (SELECT 1 FROM conversations WHERE message=$1)",
+			[messageId]
+		);
+	} catch (e) {
+		console.log(e);
+	}
 }
 
 server.listen(5000, () => {
