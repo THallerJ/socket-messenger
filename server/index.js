@@ -30,29 +30,27 @@ io.on("connection", (socket) => {
 							[msg.mes_id, id]
 						)
 						.then(async (result) => {
-							/* need to get all recipients of message 
-						format output as :
-						messageId msg.mes_id
-						recipientList: recipients
-						msg: 
-							conversationid result.rows[0].conversation_id
-							date msg
-							sender msg
-							text msg
-						*/
-
 							const conversationId = result.rows[0].conversation_id;
-
 							const recipients = await pool.query(
 								"SELECT recipient FROM conversations WHERE conversation_id=$1 AND message=$2",
 								[conversationId, msg.mes_id]
 							);
 
-							// need to handle deleting sender from conversation table when conversation is gone
-							// run select query to see if conversation_id appears only once in table, if it does then delete it
-							console.log(recipients);
+							var recipientList = [];
+							recipients.rows.forEach((recipient) => {
+								recipientList.push(recipient.recipient);
+							});
 
-							//io.to(id).emit("message-recieved", {});
+							io.to(id).emit("message-recieved", {
+								messageId: msg.mes_id,
+								recipients: filterRecipients(recipientList, id),
+								message: {
+									conversationId: conversationId,
+									date: msg.date,
+									sender: msg.sender_id,
+									text: msg.text,
+								},
+							});
 						});
 				});
 			}
@@ -62,14 +60,13 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on("send-message", async ({ message, recipients }) => {
-		const tempRecipients = [...recipients];
 		recipients.push(id); // add sender's id to list of recipients
 
-		const messageId = await saveMessage(message, id, recipients);
+		const messageId = await saveMessage(message, recipients);
 
-		tempRecipients.forEach((recipient) => {
+		recipients.forEach((recipient) => {
 			// remove the recipient who is recieving the message from the recipient array
-			const newRecipients = recipients.filter((sentTo) => sentTo !== recipient);
+			const newRecipients = filterRecipients(recipients, recipient);
 
 			io.to(recipient).emit("message-recieved", {
 				messageId: messageId, // used in the message-recieved callback
@@ -79,10 +76,17 @@ io.on("connection", (socket) => {
 		});
 	});
 
-	socket.on("message-recieved-callback", ({ messageId, userId }) => {
-		deleteMessage(messageId, userId);
-	});
+	socket.on(
+		"message-recieved-callback",
+		({ conversationId, messageId, userId }) => {
+			//deleteMessage(conversationId, messageId, userId);
+		}
+	);
 });
+
+function filterRecipients(recipients, recipient) {
+	return recipients.filter((sentTo) => sentTo !== recipient);
+}
 
 async function checkSavedMessages(id) {
 	try {
@@ -97,7 +101,7 @@ async function checkSavedMessages(id) {
 	}
 }
 
-async function saveMessage(message, senderId, recipients) {
+async function saveMessage(message, recipients) {
 	var messageId;
 	try {
 		const result = await pool.query(
@@ -110,11 +114,7 @@ async function saveMessage(message, senderId, recipients) {
 			recipients.map(async (recipient) => {
 				await pool.query(
 					"INSERT INTO conversations(conversation_id, recipient, message) VALUES($1, $2, $3)",
-					[
-						message.conversationId,
-						recipient,
-						recipient === senderId ? null : messageId,
-					]
+					[message.conversationId, recipient, messageId]
 				);
 			})
 		);

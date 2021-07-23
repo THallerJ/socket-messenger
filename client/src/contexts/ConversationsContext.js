@@ -106,7 +106,6 @@ export const ConversationsContextProvider = ({ children }) => {
 			text: message,
 		};
 
-		createOrUpdateConversation(recipients, formattedMessage);
 		socket.emit("send-message", { recipients, message: formattedMessage });
 	}
 
