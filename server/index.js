@@ -76,12 +76,9 @@ io.on("connection", (socket) => {
 		});
 	});
 
-	socket.on(
-		"message-recieved-callback",
-		({ conversationId, messageId, userId }) => {
-			//deleteMessage(conversationId, messageId, userId);
-		}
-	);
+	socket.on("message-recieved-callback", ({ messageId, userId }) => {
+		deleteMessage(messageId, userId);
+	});
 });
 
 function filterRecipients(recipients, recipient) {
@@ -110,7 +107,7 @@ async function saveMessage(message, recipients) {
 		);
 		messageId = result.rows[0].mes_id;
 
-		Promise.all(
+		await Promise.all(
 			recipients.map(async (recipient) => {
 				await pool.query(
 					"INSERT INTO conversations(conversation_id, recipient, message) VALUES($1, $2, $3)",
@@ -127,15 +124,17 @@ async function saveMessage(message, recipients) {
 
 async function deleteMessage(messageId, userId) {
 	try {
-		await pool.query(
-			"DELETE FROM conversations WHERE message=$1 AND recipient=$2",
-			[messageId, userId]
-		);
-
-		await pool.query(
-			"DELETE FROM messages WHERE mes_id=$1 AND NOT EXISTS (SELECT 1 FROM conversations WHERE message=$1)",
-			[messageId]
-		);
+		pool
+			.query("DELETE FROM conversations WHERE message=$1 AND recipient=$2", [
+				messageId,
+				userId,
+			])
+			.then(
+				pool.query(
+					"DELETE FROM messages WHERE mes_id=$1 AND NOT EXISTS (SELECT 1 FROM conversations WHERE message=$1)",
+					[messageId]
+				)
+			);
 	} catch (e) {
 		console.log(e);
 	}
