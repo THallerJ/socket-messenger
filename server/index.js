@@ -31,6 +31,7 @@ io.on("connection", (socket) => {
 						)
 						.then(async (result) => {
 							const conversationId = result.rows[0].conversation_id;
+
 							const recipients = await pool.query(
 								"SELECT recipient FROM conversations WHERE conversation_id=$1 AND message=$2",
 								[conversationId, msg.mes_id]
@@ -60,30 +61,33 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on("send-message", async ({ message, recipients }) => {
+		console.log(
+			"\n=====================================================================\n"
+		);
 		recipients.push(id); // add sender's id to list of recipients
 
 		const messageId = await saveMessage(message, recipients);
+		console.log("recipients: ", recipients);
+
+		//const result = await pool.query("SELECT * FROM conversations");
+		//console.log("SELECT result:\n", result);
 
 		recipients.forEach((recipient) => {
-			// remove the recipient who is recieving the message from the recipient array
-			const newRecipients = filterRecipients(recipients, recipient);
-
 			io.to(recipient).emit("message-recieved", {
 				messageId: messageId, // used in the message-recieved callback
-				recipients: newRecipients,
+				recipients: filterRecipients(recipients, recipient),
 				message: message,
 			});
+
+			console.log("emitted:", recipient);
 		});
 	});
 
 	socket.on("message-recieved-callback", ({ messageId, userId }) => {
+		console.log("callback", userId);
 		deleteMessage(messageId, userId);
 	});
 });
-
-function filterRecipients(recipients, recipient) {
-	return recipients.filter((sentTo) => sentTo !== recipient);
-}
 
 async function checkSavedMessages(id) {
 	try {
@@ -105,6 +109,7 @@ async function saveMessage(message, recipients) {
 			`INSERT INTO messages(sender_id, date, text) VALUES($1, to_timestamp($2), $3) RETURNING mes_id`,
 			[message.sender, message.date / 1000, message.text]
 		);
+
 		messageId = result.rows[0].mes_id;
 
 		await Promise.all(
@@ -115,29 +120,36 @@ async function saveMessage(message, recipients) {
 				);
 			})
 		);
+		console.log("promises completed");
+
+		return messageId;
 	} catch (e) {
 		console.log(e);
 	}
-
-	return messageId;
 }
 
 async function deleteMessage(messageId, userId) {
+	console.log("deleted:", userId);
+	// make function async again and wrap queries in Promise.all?
 	try {
-		pool
-			.query("DELETE FROM conversations WHERE message=$1 AND recipient=$2", [
-				messageId,
-				userId,
-			])
-			.then(
-				pool.query(
-					"DELETE FROM messages WHERE mes_id=$1 AND NOT EXISTS (SELECT 1 FROM conversations WHERE message=$1)",
-					[messageId]
-				)
-			);
+		const result = await pool.query(
+			"DELETE FROM conversations WHERE message=$1 AND recipient=$2",
+			[messageId, userId]
+		);
+
+		console.log("delete result for", userId, "\n", result);
+		// this is deleting messages before it shoudl, causing the error message
+		await pool.query(
+			"DELETE FROM messages WHERE mes_id=$1 AND NOT EXISTS (SELECT 1 FROM conversations WHERE message=$1)",
+			[messageId]
+		);
 	} catch (e) {
 		console.log(e);
 	}
+}
+
+function filterRecipients(recipients, recipient) {
+	return recipients.filter((sentTo) => sentTo !== recipient);
 }
 
 server.listen(5000, () => {
