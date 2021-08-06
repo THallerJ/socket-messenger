@@ -47,7 +47,7 @@ const AddConversationDialog = ({ open, setOpen }) => {
 
 		setContactChecked(contacts.slice().fill(false));
 
-		createOrUpdateConversation(contactsInConversation);
+		createOrUpdateConversation(contactsInConversation, null, true);
 		setOpen(false);
 	}
 

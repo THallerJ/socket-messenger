@@ -27,7 +27,7 @@ export const ConversationsContextProvider = ({ children }) => {
 	}, [conversations]);
 
 	const createOrUpdateConversation = useCallback(
-		(recipients, message) => {
+		(recipients, message, notify) => {
 			setConversations((state) => {
 				const conversationIndex = state.findIndex((conversation) =>
 					compareArrays(conversation.recipients, recipients)
@@ -36,14 +36,17 @@ export const ConversationsContextProvider = ({ children }) => {
 				if (conversationIndex < 0) {
 					// create new conversation add message to the conversation's messages array
 					const conversationId = uuidV4();
-					const msgArray = message === undefined ? [] : new Array(message);
+					const msgArray = message === null ? [] : new Array(message);
 					const newConversation = {
 						id: conversationId,
 						recipients: recipients,
 						messages: msgArray,
 					};
 
-					setCurretConversationId(conversationId);
+					if (notify) {
+						setCurretConversationId(conversationId);
+					}
+
 					return [...state, newConversation];
 				} else {
 					// add message to the existing conversation's messages array
@@ -56,7 +59,10 @@ export const ConversationsContextProvider = ({ children }) => {
 
 					temp[conversationIndex] = tempElem;
 
-					setCurretConversationId(state[conversationIndex].id);
+					if (notify) {
+						setCurretConversationId(state[conversationIndex].id);
+					}
+
 					return temp;
 				}
 			});
@@ -67,7 +73,7 @@ export const ConversationsContextProvider = ({ children }) => {
 	useEffectMounted(() => {
 		if (socket != null) {
 			socket.on("message-recieved", (msg) => {
-				createOrUpdateConversation(msg.recipients, msg.message);
+				createOrUpdateConversation(msg.recipients, msg.message, false);
 				socket.emit("message-recieved-callback", {
 					messageId: msg.messageId,
 					userId,
