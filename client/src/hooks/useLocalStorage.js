@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-const PREFIX = 'messaging-app';
+const PREFIX = "messaging-app";
 
 function useLocalStorage(key, initialValue) {
 	const prefixedKey = PREFIX + key;
@@ -9,7 +9,7 @@ function useLocalStorage(key, initialValue) {
 
 		if (jsonValue != null) return JSON.parse(jsonValue);
 
-		if (typeof initialValue === 'function') {
+		if (typeof initialValue === "function") {
 			return initialValue();
 		} else {
 			return initialValue;
@@ -17,7 +17,10 @@ function useLocalStorage(key, initialValue) {
 	});
 
 	useEffect(() => {
-		localStorage.setItem(prefixedKey, JSON.stringify(value));
+		// setting the value deletes the item from local storage
+		value
+			? localStorage.setItem(prefixedKey, JSON.stringify(value))
+			: localStorage.removeItem(prefixedKey);
 	}, [prefixedKey, value]);
 
 	return [value, setValue];
