@@ -39,20 +39,23 @@ const Conversations = () => {
 	const conversationList = (
 		<div>
 			<Grid container alignItems="center" justify="center">
-				{conversations.map((conversation, index) => {
-					return (
-						<Conversation
-							key={index}
-							id={conversation.id}
-							recipients={conversation.recipients}
-							lastMessage={
-								conversation.messages.length > 0
-									? conversation.messages[conversation.messages.length - 1].text
-									: ""
-							}
-						/>
-					);
-				})}
+				{conversations
+					? conversations.map((conversation, index) => {
+							return (
+								<Conversation
+									key={index}
+									id={conversation.id}
+									recipients={conversation.recipients}
+									lastMessage={
+										conversation.messages.length > 0
+											? conversation.messages[conversation.messages.length - 1]
+													.text
+											: ""
+									}
+								/>
+							);
+					  })
+					: ""}
 			</Grid>
 		</div>
 	);
@@ -80,7 +83,9 @@ const Conversations = () => {
 	return (
 		<div className={classes.root}>
 			<CreateConversationDialog open={openDialog} setOpen={setOpenDialog} />
-			{conversations.length > 0 ? conversationList : emptyConversationtList}
+			{conversations && conversations.length > 0
+				? conversationList
+				: emptyConversationtList}
 			<Fab
 				className={classes.fab}
 				onClick={() => setOpenDialog(true)}

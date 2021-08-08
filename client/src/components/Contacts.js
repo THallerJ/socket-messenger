@@ -33,9 +33,11 @@ const Contacts = () => {
 		<div>
 			<ContactsHeader />
 			<Grid container alignItems="center" justify="center">
-				{contacts.map((person, index) => {
-					return <Contact key={index} name={person.name} id={person.id} />;
-				})}
+				{contacts
+					? contacts.map((person, index) => {
+							return <Contact key={index} name={person.name} id={person.id} />;
+					  })
+					: ""}
 			</Grid>
 		</div>
 	);
@@ -61,7 +63,7 @@ const Contacts = () => {
 
 	return (
 		<div className={classes.root}>
-			{contacts.length > 0 ? contactList : emptyContactList}
+			{contacts && contacts.length > 0 ? contactList : emptyContactList}
 			<AddContactDialog open={openDialog} setOpen={setOpenDialog} />
 			<Fab
 				className={classes.fab}

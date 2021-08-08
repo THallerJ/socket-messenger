@@ -36,7 +36,7 @@ const AddConversationDialog = ({ open, setOpen }) => {
 	const { createOrUpdateConversation } = useConversations();
 
 	const [contactChecked, setContactChecked] = useState(
-		contacts.slice().fill(false)
+		contacts ? contacts.slice().fill(false) : []
 	);
 
 	function handleSubmit() {
@@ -59,22 +59,24 @@ const AddConversationDialog = ({ open, setOpen }) => {
 
 	const contactList = (
 		<FormGroup>
-			{contacts.map((contact, index) => {
-				return (
-					<FormControlLabel
-						key={index}
-						control={
-							<Checkbox
-								color="primary"
-								checked={contactChecked[index]}
-								onClick={() => toggleContactCheckbox(index)}
-								name="checkedA"
+			{contacts
+				? contacts.map((contact, index) => {
+						return (
+							<FormControlLabel
+								key={index}
+								control={
+									<Checkbox
+										color="primary"
+										checked={contactChecked[index]}
+										onClick={() => toggleContactCheckbox(index)}
+										name="checkedA"
+									/>
+								}
+								label={contact.name}
 							/>
-						}
-						label={contact.name}
-					/>
-				);
-			})}
+						);
+				  })
+				: ""}
 		</FormGroup>
 	);
 
@@ -101,10 +103,10 @@ const AddConversationDialog = ({ open, setOpen }) => {
 			</DialogTitle>
 			<Divider className={classes.divider} />
 			<div className={classes.body}>
-				{contacts.length > 0 ? contactList : emptyContactList}
+				{contacts && contacts.length > 0 ? contactList : emptyContactList}
 			</div>
 			<ButtonGroup className={classes.buttonGroup}>
-				{contacts.length > 0 ? submitButton : ""}
+				{contacts && contacts.length > 0 ? submitButton : ""}
 				<Button onClick={() => setOpen(false)} variant="contained">
 					Cancel
 				</Button>
