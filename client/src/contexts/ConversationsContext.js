@@ -22,10 +22,6 @@ export const ConversationsContextProvider = ({ children }) => {
 		setSocket(io(SERVER_URL, { query: { userId: userId } }));
 	}, [userId]);
 
-	useEffect(() => {
-		console.log("conversation:", conversations);
-	}, [conversations]);
-
 	const createOrUpdateConversation = useCallback(
 		(recipients, message, notify) => {
 			setConversations((state) => {

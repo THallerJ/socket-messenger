@@ -17,7 +17,7 @@ function useLocalStorage(key, initialValue) {
 	});
 
 	useEffect(() => {
-		// setting the value deletes the item from local storage
+		// setting the value to null deletes the item from local storage
 		value
 			? localStorage.setItem(prefixedKey, JSON.stringify(value))
 			: localStorage.removeItem(prefixedKey);

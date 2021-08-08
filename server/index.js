@@ -20,6 +20,7 @@ io.on("connection", (socket) => {
 	const id = socket.handshake.query.userId;
 	socket.join(id);
 
+	// check for new messages that were sent when user was offline
 	checkSavedMessages(id).then((messages) => {
 		try {
 			if (messages != undefined) {
@@ -61,16 +62,9 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on("send-message", async ({ message, recipients }) => {
-		console.log(
-			"\n=====================================================================\n"
-		);
 		recipients.push(id); // add sender's id to list of recipients
 
 		const messageId = await saveMessage(message, recipients);
-		console.log("recipients: ", recipients);
-
-		//const result = await pool.query("SELECT * FROM conversations");
-		//console.log("SELECT result:\n", result);
 
 		recipients.forEach((recipient) => {
 			io.to(recipient).emit("message-recieved", {
@@ -78,13 +72,10 @@ io.on("connection", (socket) => {
 				recipients: filterRecipients(recipients, recipient),
 				message: message,
 			});
-
-			console.log("emitted:", recipient);
 		});
 	});
 
 	socket.on("message-recieved-callback", ({ messageId, userId }) => {
-		console.log("callback", userId);
 		deleteMessage(messageId, userId);
 	});
 });
@@ -120,7 +111,6 @@ async function saveMessage(message, recipients) {
 				);
 			})
 		);
-		console.log("promises completed");
 
 		return messageId;
 	} catch (e) {
@@ -129,16 +119,12 @@ async function saveMessage(message, recipients) {
 }
 
 async function deleteMessage(messageId, userId) {
-	console.log("deleted:", userId);
-	// make function async again and wrap queries in Promise.all?
 	try {
 		const result = await pool.query(
 			"DELETE FROM conversations WHERE message=$1 AND recipient=$2",
 			[messageId, userId]
 		);
 
-		console.log("delete result for", userId, "\n", result);
-		// this is deleting messages before it shoudl, causing the error message
 		await pool.query(
 			"DELETE FROM messages WHERE mes_id=$1 AND NOT EXISTS (SELECT 1 FROM conversations WHERE message=$1)",
 			[messageId]
