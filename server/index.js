@@ -138,6 +138,4 @@ function filterRecipients(recipients, recipient) {
 	return recipients.filter((sentTo) => sentTo !== recipient);
 }
 
-server.listen(5000, () => {
-	console.log("listening at port: 5000");
-});
+server.listen(5000);
