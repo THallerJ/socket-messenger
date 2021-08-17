@@ -138,4 +138,4 @@ function filterRecipients(recipients, recipient) {
 	return recipients.filter((sentTo) => sentTo !== recipient);
 }
 
-server.listen(5000);
+server.listen(process.env.PORT || 5000);
