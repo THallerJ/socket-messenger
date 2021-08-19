@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
 		bottom: theme.spacing(2),
 		right: theme.spacing(2),
 	},
+	emptyMessage: {
+		padding: "20%",
+	},
 }));
 
 const Conversations = () => {
@@ -61,7 +64,7 @@ const Conversations = () => {
 	);
 
 	const emptyConversationtList = (
-		<div>
+		<div className={classes.emptyMessage}>
 			<Grid
 				container
 				direction="column"
