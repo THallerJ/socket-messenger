@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	emptyMessage: {
 		padding: "20%",
+		minHeight: "95vh",
 	},
 }));
 
@@ -64,13 +65,13 @@ const Conversations = () => {
 	);
 
 	const emptyConversationtList = (
-		<div className={classes.emptyMessage}>
+		<div>
 			<Grid
+				className={classes.emptyMessage}
 				container
 				direction="column"
 				alignItems="center"
 				justify="center"
-				style={{ minHeight: "95vh" }}
 			>
 				<Typography color="textSecondary">
 					You don't have any active conversations.

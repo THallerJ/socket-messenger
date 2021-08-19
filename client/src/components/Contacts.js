@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
 		right: theme.spacing(2),
 	},
 	emptyMessage: {
+		minHeight: "95vh",
 		padding: "20%",
 	},
 }));
@@ -46,13 +47,13 @@ const Contacts = () => {
 	);
 
 	const emptyContactList = (
-		<div className={classes.emptyMessage}>
+		<div>
 			<Grid
+				className={classes.emptyMessage}
 				container
 				direction="column"
 				alignItems="center"
 				justify="center"
-				style={{ minHeight: "95vh" }}
 			>
 				<Typography color="textSecondary">
 					You don't have any contacts.
