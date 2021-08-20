@@ -14,6 +14,10 @@ const pool = new Pool({
 	host: process.env.POSTGRES_HOST,
 	port: process.env.POSTGRES_PORT,
 	database: process.env.POSTGRES_DATABASE,
+	ssl: {
+		required: true,
+		rejectUnauthorized: false,
+	},
 });
 
 io.on("connection", (socket) => {
