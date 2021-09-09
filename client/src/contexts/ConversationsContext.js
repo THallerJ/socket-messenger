@@ -73,6 +73,7 @@ export const ConversationsContextProvider = ({ children }) => {
 				socket.emit("message-recieved-callback", {
 					messageId: msg.messageId,
 					userId,
+					doDeleteConversation: msg.deleteConversation,
 				});
 			});
 		}
