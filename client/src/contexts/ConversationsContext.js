@@ -24,15 +24,25 @@ export const ConversationsContextProvider = ({ children }) => {
 
 	const createOrUpdateConversation = useCallback(
 		(recipients, message, notify) => {
+			recipients.sort();
+
 			setConversations((state) => {
 				const conversationIndex = state.findIndex((conversation) =>
 					compareArrays(conversation.recipients, recipients)
 				);
 
 				if (conversationIndex < 0) {
-					// create new conversation add message to the conversation's messages array
-					const conversationId = uuidV4();
-					const msgArray = message === null ? [] : new Array(message);
+					var conversationId;
+					var msgArray;
+
+					if (message === null) {
+						msgArray = [];
+						conversationId = uuidV4();
+					} else {
+						msgArray = new Array(message);
+						conversationId = message.conversationId;
+					}
+
 					const newConversation = {
 						id: conversationId,
 						recipients: recipients,

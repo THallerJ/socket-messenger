@@ -83,6 +83,8 @@ io.on("connection", async (socket) => {
 					[obj.conversation]
 				);
 
+				console.log("recResult", recResult);
+
 				var recipients = [];
 				recResult.rows.forEach((recipient) => {
 					recipients.push(recipient.user_id);
@@ -109,6 +111,7 @@ io.on("connection", async (socket) => {
 
 	socket.on("send-message", async ({ message, recipients }) => {
 		recipients.push(id); // add sender's id to list of recipients
+		recipients.sort();
 
 		const messageId = await saveMessage(message, recipients);
 
