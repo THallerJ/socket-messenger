@@ -95,7 +95,7 @@ const AddContactDialog = ({ open, setOpen }) => {
 				onClose={() => setOpenSnackbar(false)}
 			>
 				<Alert onClose={() => setOpenSnackbar(false)} severity="error">
-					ID must be 36 characters.
+					ID must be 36 characters
 				</Alert>
 			</Snackbar>
 		</div>
