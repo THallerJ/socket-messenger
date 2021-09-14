@@ -13,10 +13,11 @@ const useStyles = makeStyles((theme) => ({
 		height: "100%",
 	},
 	chatBubbleContainer: {
-		height: "82vh",
+		height: "90%",
 		overflow: "auto",
 	},
 	sendContainer: {
+		height: "10%",
 		paddingTop: theme.spacing(1),
 		paddingLeft: theme.spacing(6),
 	},
@@ -49,6 +50,7 @@ const Chatroom = () => {
 			conversation.recipients,
 			textfieldRef.current.value
 		);
+
 		textfieldRef.current.value = "";
 	}
 

@@ -20,7 +20,7 @@ import { useDashboard } from "../contexts/DashboardContext";
 const useStyles = makeStyles((theme) => ({
 	root: {
 		display: "flex",
-		minHeight: "97vh",
+		height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`,
 	},
 	container: {
 		paddingTop: theme.mixins.toolbar.minHeight + theme.spacing(1),
