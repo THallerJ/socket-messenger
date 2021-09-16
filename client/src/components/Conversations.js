@@ -8,6 +8,7 @@ import Conversation from "./Conversation";
 import useEffectMounted from "../hooks/useEffectMounted";
 import { useHistory } from "react-router-dom";
 import { useDashboard } from "../contexts/DashboardContext";
+import HideOnScrollDown from "./HideOnScrollDown";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -90,14 +91,16 @@ const Conversations = () => {
 			{conversations && conversations.length > 0
 				? conversationList
 				: emptyConversationtList}
-			<Fab
-				className={classes.fab}
-				onClick={() => setOpenDialog(true)}
-				color="primary"
-				aria-label="add"
-			>
-				<AddIcon />
-			</Fab>
+			<HideOnScrollDown>
+				<Fab
+					className={classes.fab}
+					onClick={() => setOpenDialog(true)}
+					color="primary"
+					aria-label="add"
+				>
+					<AddIcon />
+				</Fab>
+			</HideOnScrollDown>
 		</div>
 	);
 };

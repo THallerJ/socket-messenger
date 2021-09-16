@@ -8,6 +8,7 @@ import { Grid, Typography } from "@material-ui/core";
 import ContactsHeader from "./ContactsHeader";
 import { useContacts } from "../contexts/ContactsContext";
 import { useDashboard } from "../contexts/DashboardContext";
+import HideOnScrollDown from "./HideOnScrollDown";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -69,14 +70,16 @@ const Contacts = () => {
 		<div className={classes.root}>
 			{contacts && contacts.length > 0 ? contactList : emptyContactList}
 			<AddContactDialog open={openDialog} setOpen={setOpenDialog} />
-			<Fab
-				className={classes.fab}
-				onClick={() => setOpenDialog(true)}
-				color="primary"
-				aria-label="add"
-			>
-				<AddIcon />
-			</Fab>
+			<HideOnScrollDown>
+				<Fab
+					className={classes.fab}
+					onClick={() => setOpenDialog(true)}
+					color="primary"
+					aria-label="add"
+				>
+					<AddIcon />
+				</Fab>
+			</HideOnScrollDown>
 		</div>
 	);
 };
