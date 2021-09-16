@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
 		right: theme.spacing(2),
 	},
 	emptyMessage: {
-		minHeight: "95vh",
 		padding: "20%",
 	},
 }));

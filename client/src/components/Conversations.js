@@ -21,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
 	},
 	emptyMessage: {
 		padding: "20%",
-		minHeight: "95vh",
 	},
 }));
 
