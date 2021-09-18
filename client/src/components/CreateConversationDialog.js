@@ -10,7 +10,9 @@ import {
 	FormGroup,
 	Divider,
 	Grid,
+	Snackbar,
 } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import { useContacts } from "../contexts/ContactsContext";
 import { useConversations } from "../contexts/ConversationsContext";
@@ -32,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 const AddConversationDialog = ({ open, setOpen }) => {
 	const classes = useStyles();
 
+	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const { contacts } = useContacts();
 	const { createOrUpdateConversation } = useConversations();
 
@@ -47,8 +50,9 @@ const AddConversationDialog = ({ open, setOpen }) => {
 
 		setContactChecked(contacts.slice().fill(false));
 
-		createOrUpdateConversation(contactsInConversation, null, true);
-		setOpen(false);
+		contactsInConversation.length === 0
+			? setOpenSnackbar(true)
+			: createOrUpdateConversation(contactsInConversation, null, true, false);
 	}
 
 	function toggleContactCheckbox(index) {
@@ -111,6 +115,15 @@ const AddConversationDialog = ({ open, setOpen }) => {
 					Cancel
 				</Button>
 			</ButtonGroup>
+			<Snackbar
+				open={openSnackbar}
+				autoHideDuration={1500}
+				onClose={() => setOpenSnackbar(false)}
+			>
+				<Alert onClose={() => setOpenSnackbar(false)} severity="info">
+					No contacts selected
+				</Alert>
+			</Snackbar>
 		</Dialog>
 	);
 };

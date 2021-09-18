@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import useLocalStorage from '../hooks/useLocalStorage';
+import React, { useContext } from "react";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 const ContactsContext = React.createContext();
 
 export const ContactsContextProvider = ({ children }) => {
-	const [contacts, setContacts] = useLocalStorage('contacts', []);
+	const [contacts, setContacts] = useLocalStorage("contacts", []);
 
 	// convert array of contact ids into an array of contact names
 	function idToName(contactList) {
@@ -17,6 +17,10 @@ export const ContactsContextProvider = ({ children }) => {
 	}
 
 	function createContact(id, name) {
+		if (contacts.find((e) => e.id === id)) {
+			return false;
+		}
+
 		const tempContacts = [...contacts, { id: id, name: name }];
 
 		setContacts(
@@ -25,6 +29,8 @@ export const ContactsContextProvider = ({ children }) => {
 				return a.name.localeCompare(b.name);
 			})
 		);
+
+		return true; // returns true for successful creation of contact
 	}
 
 	function deleteContact(id) {

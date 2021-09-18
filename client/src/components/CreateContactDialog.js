@@ -33,21 +33,28 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const AddContactDialog = ({ open, setOpen }) => {
+const CreateContactDialog = ({ open, setOpen }) => {
 	const classes = useStyles();
 
 	const nameRef = useRef();
 	const idRef = useRef();
 	const [openSnackbar, setOpenSnackbar] = useState(false);
+	const [snackbarText, setSnackbarText] = useState("");
 
 	const { createContact } = useContacts();
 
+	function setupSnackbar(text) {
+		setSnackbarText(text);
+		setOpenSnackbar(true);
+	}
+
 	function handleSubmit() {
 		if (idRef.current.value.length === 36) {
-			createContact(idRef.current.value, nameRef.current.value);
-			setOpen(false);
+			createContact(idRef.current.value, nameRef.current.value)
+				? setOpen(false)
+				: setupSnackbar("Contact with ID already exists");
 		} else {
-			setOpenSnackbar(true);
+			setupSnackbar("ID must be 36 characters long");
 		}
 	}
 
@@ -94,12 +101,12 @@ const AddContactDialog = ({ open, setOpen }) => {
 				autoHideDuration={1500}
 				onClose={() => setOpenSnackbar(false)}
 			>
-				<Alert onClose={() => setOpenSnackbar(false)} severity="error">
-					ID must be 36 characters
+				<Alert onClose={() => setOpenSnackbar(false)} severity="info">
+					{snackbarText}
 				</Alert>
 			</Snackbar>
 		</div>
 	);
 };
 
-export default AddContactDialog;
+export default CreateContactDialog;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
-import AddContactDialog from "./AddContactDialog";
+import CreateContactDialog from "./CreateContactDialog";
 import Contact from "./Contact";
 import { Grid, Typography } from "@material-ui/core";
 import ContactsHeader from "./ContactsHeader";
@@ -68,7 +68,7 @@ const Contacts = () => {
 	return (
 		<div className={classes.root}>
 			{contacts && contacts.length > 0 ? contactList : emptyContactList}
-			<AddContactDialog open={openDialog} setOpen={setOpenDialog} />
+			<CreateContactDialog open={openDialog} setOpen={setOpenDialog} />
 			<HideOnScrollDown>
 				<Fab
 					className={classes.fab}
