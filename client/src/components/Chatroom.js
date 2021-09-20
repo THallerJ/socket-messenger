@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useConversations } from "../contexts/ConversationsContext";
 import { useContacts } from "../contexts/ContactsContext";
@@ -31,10 +31,13 @@ const useStyles = makeStyles((theme) => ({
 
 const Chatroom = () => {
 	const classes = useStyles();
+
 	const { conversationId } = useParams();
 	const { idToConversation, sendMessage } = useConversations();
 	const { idToName } = useContacts();
 	const { setToolbarTitle } = useDashboard();
+	const [disableButton, setDisableButton] = useState(false);
+
 	const textfieldRef = useRef();
 	const conversation = idToConversation(conversationId);
 
@@ -45,6 +48,12 @@ const Chatroom = () => {
 	});
 
 	function handleSubmit() {
+		// disable button for 0.5 seconds to prevent double clicks
+		setDisableButton(true);
+		setTimeout(() => {
+			setDisableButton(false);
+		}, 500);
+
 		sendMessage(
 			conversation.id,
 			conversation.recipients,
@@ -73,6 +82,7 @@ const Chatroom = () => {
 							size="small"
 							onClick={handleSubmit}
 							startIcon={<SendIcon />}
+							disabled={disableButton}
 						>
 							Send
 						</Button>

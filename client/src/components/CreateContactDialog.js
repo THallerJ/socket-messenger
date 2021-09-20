@@ -38,8 +38,10 @@ const CreateContactDialog = ({ open, setOpen }) => {
 
 	const nameRef = useRef();
 	const idRef = useRef();
+
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const [snackbarText, setSnackbarText] = useState("");
+	const [disableButton, setDisableButton] = useState(false);
 
 	const { createContact } = useContacts();
 
@@ -49,6 +51,8 @@ const CreateContactDialog = ({ open, setOpen }) => {
 	}
 
 	function handleSubmit() {
+		setDisableButton(true); // prevent double clicking submit button
+
 		if (idRef.current.value.length === 36) {
 			createContact(idRef.current.value, nameRef.current.value)
 				? setOpen(false)
@@ -88,7 +92,12 @@ const CreateContactDialog = ({ open, setOpen }) => {
 					/>
 				</div>
 				<ButtonGroup className={classes.buttonGroup}>
-					<Button onClick={handleSubmit} variant="contained" color="primary">
+					<Button
+						onClick={handleSubmit}
+						disabled={disableButton}
+						variant="contained"
+						color="primary"
+					>
 						OK
 					</Button>
 					<Button onClick={() => setOpen(false)} variant="contained">

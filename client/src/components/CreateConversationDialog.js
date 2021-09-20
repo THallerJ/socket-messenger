@@ -34,15 +34,18 @@ const useStyles = makeStyles((theme) => ({
 const AddConversationDialog = ({ open, setOpen }) => {
 	const classes = useStyles();
 
-	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const { contacts } = useContacts();
 	const { createOrUpdateConversation } = useConversations();
 
+	const [openSnackbar, setOpenSnackbar] = useState(false);
+	const [disableButton, setDisableButton] = useState(false);
 	const [contactChecked, setContactChecked] = useState(
 		contacts ? contacts.slice().fill(false) : []
 	);
 
 	function handleSubmit() {
+		setDisableButton(true); // prevent double clicking submit button
+
 		const contactsInConversation = [];
 		contactChecked.forEach((value, index) => {
 			if (value) contactsInConversation.push(contacts[index].id);
@@ -91,7 +94,12 @@ const AddConversationDialog = ({ open, setOpen }) => {
 	);
 
 	const submitButton = (
-		<Button onClick={handleSubmit} variant="contained" color="primary">
+		<Button
+			onClick={handleSubmit}
+			disabled={disableButton}
+			variant="contained"
+			color="primary"
+		>
 			OK
 		</Button>
 	);
