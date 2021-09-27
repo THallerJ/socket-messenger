@@ -84,6 +84,23 @@ export const ConversationsContextProvider = ({ children }) => {
 
 	useEffectMounted(() => {
 		if (socket != null) {
+			socket.on("cached-messages-recieved", (obj) => {
+				obj.messages.sort((a, b) => a.messageId - b.messageId);
+
+				obj.messages.forEach((msg) => {
+					createOrUpdateConversation(msg.recipients, msg.message, false, true);
+					socket.emit("message-recieved-callback", {
+						messageId: msg.messageId,
+						userId,
+						doDeleteConversation: msg.deleteConversation,
+					});
+				});
+			});
+		}
+	}, [socket, userId, createOrUpdateConversation]);
+
+	useEffectMounted(() => {
+		if (socket != null) {
 			socket.on("message-recieved", (msg) => {
 				createOrUpdateConversation(msg.recipients, msg.message, false, true);
 				socket.emit("message-recieved-callback", {

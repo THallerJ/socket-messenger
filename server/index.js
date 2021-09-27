@@ -65,48 +65,12 @@ async function createTables() {
 io.on("connection", async (socket) => {
 	const id = socket.handshake.query.userId;
 	socket.join(id);
-	const cached = await checkSavedMessages(id);
+	const cachedMessages = await checkSavedMessages(id);
 
-	if (cached !== []) {
-		try {
-			cached.map(async (obj) => {
-				const msgResult = await pool.query(
-					`SELECT conversation.conversation_id, conversation_recipient.user_id, message.date, message.message_id, message.sender_id, message.text 
-					 FROM conversation INNER JOIN conversation_recipient ON conversation.cv_id=conversation_recipient.conversation 
-					 INNER JOIN message ON message.conversation=conversation.cv_id
-					 WHERE conversation.cv_id=$1 AND conversation_recipient.user_id=$2`,
-					[obj.conversation, obj.user_id]
-				);
-
-				const recResult = await pool.query(
-					"SELECT user_id FROM conversation_recipient WHERE conversation=$1",
-					[obj.conversation]
-				);
-
-				console.log("recResult", recResult);
-
-				var recipients = [];
-				recResult.rows.forEach((recipient) => {
-					recipients.push(recipient.user_id);
-				});
-
-				msgResult.rows.forEach((msg) => {
-					io.to(id).emit("message-recieved", {
-						messageId: msg.message_id,
-						recipients: filterRecipients(recipients, id),
-						deleteConversation: true,
-						message: {
-							conversationId: msg.conversation_id,
-							sender: msg.sender_id,
-							date: msg.date,
-							text: msg.text,
-						},
-					});
-				});
-			});
-		} catch (e) {
-			console.log(e);
-		}
+	if (cachedMessages.length > 0) {
+		io.to(id).emit("cached-messages-recieved", {
+			messages: cachedMessages,
+		});
 	}
 
 	socket.on("send-message", async ({ message, recipients }) => {
@@ -137,11 +101,48 @@ io.on("connection", async (socket) => {
 // check if a user has any messages saved in the database
 async function checkSavedMessages(id) {
 	try {
-		const result = await pool.query(
-			"SELECT * FROM message_cache WHERE user_id=$1",
+		msgResult = await pool.query(
+			`SELECT conversation.cv_id, conversation.conversation_id, message.date, message.message_id, message.sender_id, message.text
+			 FROM message_cache
+		     INNER JOIN conversation ON conversation.cv_id=message_cache.conversation
+			 INNER JOIN message ON message.message_id = message_cache.message_id
+			 WHERE message_cache.user_id=$1`,
 			[id]
 		);
-		return result.rows;
+
+		const messageArray = [];
+
+		if (msgResult.rows.length > 0) {
+			await Promise.all(
+				msgResult.rows.map(async (msg) => {
+					const recResult = await pool.query(
+						`SELECT user_id FROM conversation_recipient WHERE conversation=$1`,
+						[msg.cv_id]
+					);
+
+					var recipients = [];
+					recResult.rows.forEach((recipient) => {
+						recipients.push(recipient.user_id);
+					});
+
+					const messageObj = {
+						messageId: msg.message_id,
+						recipients: filterRecipients(recipients, id),
+						deleteConversation: true,
+						message: {
+							conversationId: msg.conversation_id,
+							sender: msg.sender_id,
+							date: msg.date,
+							text: msg.text,
+						},
+					};
+
+					messageArray.push(messageObj);
+				})
+			);
+		}
+
+		return messageArray;
 	} catch (e) {
 		console.log(e);
 	}
@@ -151,7 +152,7 @@ async function saveMessage(message, recipients) {
 	var messageId;
 	try {
 		const conversationResult = await pool.query(
-			`WITH inserted AS(
+			`WITH inserted AS (
 				INSERT INTO conversation(conversation_id) 
 				VALUES($1) ON CONFLICT DO NOTHING RETURNING cv_id)
 			 SELECT * FROM inserted
