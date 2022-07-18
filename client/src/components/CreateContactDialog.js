@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
 	Button,
 	ButtonGroup,
@@ -50,13 +50,19 @@ const CreateContactDialog = ({ open, setOpen }) => {
 		setOpenSnackbar(true);
 	}
 
-	function handleSubmit() {
-		setDisableButton(true); // prevent double clicking submit button
+	useEffect(() => {
+		if (open) setDisableButton(false);
+	}, [open]);
 
+	function handleSubmit() {
 		if (idRef.current.value.length === 36) {
-			createContact(idRef.current.value, nameRef.current.value)
-				? setOpen(false)
-				: setupSnackbar("Contact with ID already exists");
+			// if contact successfully created...
+			if (createContact(idRef.current.value, nameRef.current.value)) {
+				setDisableButton(true); // prevent double clicking submit button
+				setOpen(false);
+			} else {
+				setupSnackbar("Contact with ID already exists");
+			}
 		} else {
 			setupSnackbar("ID must be 36 characters long");
 		}
