@@ -58,8 +58,8 @@ const Sidebar = () => {
 	}
 
 	function signout() {
-		setContacts(null);
-		setConversations(null);
+		setContacts([]);
+		setConversations([]);
 		setSignOut(true);
 	}
 

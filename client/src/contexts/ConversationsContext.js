@@ -84,12 +84,12 @@ export const ConversationsContextProvider = ({ children }) => {
 
 	useEffectMounted(() => {
 		if (socket != null) {
-			socket.on("cached-messages-recieved", (obj) => {
+			socket.on("cached-messages-received", (obj) => {
 				obj.messages.sort((a, b) => a.messageId - b.messageId);
 
 				obj.messages.forEach((msg) => {
 					createOrUpdateConversation(msg.recipients, msg.message, false, true);
-					socket.emit("message-recieved-callback", {
+					socket.emit("message-received-callback", {
 						messageId: msg.messageId,
 						userId,
 						doDeleteConversation: msg.deleteConversation,
@@ -101,9 +101,9 @@ export const ConversationsContextProvider = ({ children }) => {
 
 	useEffectMounted(() => {
 		if (socket != null) {
-			socket.on("message-recieved", (msg) => {
+			socket.on("message-received", (msg) => {
 				createOrUpdateConversation(msg.recipients, msg.message, false, true);
-				socket.emit("message-recieved-callback", {
+				socket.emit("message-received-callback", {
 					messageId: msg.messageId,
 					userId,
 					doDeleteConversation: msg.deleteConversation,
