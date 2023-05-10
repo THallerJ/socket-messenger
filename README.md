@@ -2,7 +2,9 @@
 
 ## Description
 
-[Socket Messenger](https://socketmessenger.netlify.app/) is a simple messaging web app.
+Socket Messenger is a simple messaging web app.
+
+_Note: The app is currently not deployed due to heroku removing free postgres integration_
 
 ## Development
 
