@@ -1,34 +1,24 @@
+const Pool = require("pg").Pool;
 require("dotenv").config();
 
-module.exports = function (pool) {
-	return {
-		createTables: async function createTables() {
-			await pool.query(
-				"CREATE TABLE IF NOT EXISTS conversation(cv_id SERIAL PRIMARY KEY, conversation_id CHAR(36) UNIQUE)"
-			);
+const isProduction = process.env.IS_PRODUCTION == "true";
 
-			await pool.query(`CREATE TABLE IF NOT EXISTS message( 
-							message_id SERIAL PRIMARY KEY, 
-							sender_id CHAR(36), 
-							date TIMESTAMPTZ, 
-							text TEXT, 
-							conversation INTEGER, 
-							CONSTRAINT fk_mc FOREIGN KEY(conversation) REFERENCES conversation(cv_id) ON DELETE CASCADE)`);
+const poolConfig = isProduction
+	? {
+			connectionString: process.env.DATABASE_URL,
+			ssl: {
+				required: true,
+				PromiseRejectionEvent: false,
+			},
+	  }
+	: {
+			user: process.env.POSTGRES_USER,
+			password: process.env.POSTGRES_PASSWORD,
+			host: process.env.POSTGRES_HOST,
+			port: process.env.POSTGRES_PORT,
+			database: process.env.POSTGRES_DATABASE,
+	  };
 
-			await pool.query(`CREATE TABLE IF NOT EXISTS conversation_recipient(
-							cr_id SERIAL PRIMARY KEY,
-							user_id CHAR(36),
-							conversation INTEGER, 
-							UNIQUE (user_id, conversation),
-							CONSTRAINT fk_cr_conversation_id FOREIGN KEY(conversation) REFERENCES conversation(cv_id) ON DELETE CASCADE)`);
+const pool = new Pool(poolConfig);
 
-			await pool.query(`CREATE TABLE IF NOT EXISTS message_cache(
-							mc_id SERIAL PRIMARY KEY, 
-							user_id CHAR(36), 
-							conversation INTEGER, 
-							message_id INTEGER, 
-							CONSTRAINT fk_cr_message_id FOREIGN KEY(message_id) REFERENCES message(message_id),
-							CONSTRAINT fk_cr_conversation_id FOREIGN KEY(conversation) REFERENCES conversation(cv_id) ON DELETE CASCADE)`);
-		},
-	};
-};
+module.exports.pool = pool;

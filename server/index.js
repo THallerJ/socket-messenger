@@ -5,8 +5,8 @@ const io = require("socket.io")(server, {
 		origin: "*",
 	},
 });
-const { pool } = require("./socketConfig");
-const { createTables } = require("./dbConfig")(pool);
+const { pool } = require("./dbConfig");
+const { createTables } = require("./dbInit")(pool);
 const dbController = require("./dbController")(pool);
 const { filterRecipients } = require("./utils");
 require("dotenv").config();
