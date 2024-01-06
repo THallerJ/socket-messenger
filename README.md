@@ -2,9 +2,7 @@
 
 ## Description
 
-Socket Messenger is a simple messaging web app.
-
-_Note: The app is currently not deployed due to heroku removing free postgres integration_
+[Socket Messenger](https://socket-messenger-qy8t.onrender.com) is a simple messaging web app.
 
 ## Development
 
