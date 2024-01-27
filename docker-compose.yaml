@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  web:
+    depends_on:
+      - api
+    build:
+      context: ./client
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_SERVER_URL=http://localhost:5000
+  api:
+    depends_on:
+      - db
+    build: ./server
+    restart: on-failure:10
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_DATABASE: database
+    ports:
+      - "5000:5000"
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: database
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+volumes:
+  db_data:

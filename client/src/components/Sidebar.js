@@ -80,19 +80,17 @@ const Sidebar = () => {
 		<div>
 			<div className={classes.drawerHeader}>
 				<Typography className={classes.drawerTitle} variant="h6">
-					Socket Messenger
+					Socket pop
 				</Typography>
 				<CopyToClipboard text={userId}>
 					<Button
 						variant="text"
 						size="small"
-						onClick={() => setOpenSnackbar(true)}
-					>
+						onClick={() => setOpenSnackbar(true)}>
 						<Typography
 							color="textSecondary"
 							variant="subtitle2"
-							style={{ textTransform: "none" }}
-						>
+							style={{ textTransform: "none" }}>
 							ID: {userId}
 						</Typography>
 					</Button>
@@ -100,8 +98,7 @@ const Sidebar = () => {
 				<Snackbar
 					open={openSnackbar}
 					autoHideDuration={1500}
-					onClose={() => setOpenSnackbar(false)}
-				>
+					onClose={() => setOpenSnackbar(false)}>
 					<Alert onClose={() => setOpenSnackbar(false)} severity="info">
 						ID copied to clipboard
 					</Alert>
@@ -125,8 +122,7 @@ const Sidebar = () => {
 					color="primary"
 					size="medium"
 					startIcon={<ExitToAppIcon />}
-					onClick={() => signout()}
-				>
+					onClick={() => signout()}>
 					Sign Out
 				</Button>
 			</div>
@@ -141,8 +137,7 @@ const Sidebar = () => {
 					variant="persistent"
 					anchor="left"
 					open={true}
-					classes={{ paper: classes.drawer }}
-				>
+					classes={{ paper: classes.drawer }}>
 					{drawerContent}
 				</Drawer>
 			</Hidden>
@@ -153,8 +148,7 @@ const Sidebar = () => {
 					open={openDrawer}
 					close={() => handleDrawerClose}
 					classes={{ paper: classes.drawer }}
-					ModalProps={{ onBackdropClick: handleDrawerClose }}
-				>
+					ModalProps={{ onBackdropClick: handleDrawerClose }}>
 					{drawerContent}
 				</Drawer>
 			</Hidden>
