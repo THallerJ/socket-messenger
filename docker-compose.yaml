@@ -21,6 +21,7 @@ services:
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
       POSTGRES_DATABASE: database
+      IS_PRODUCTION: false
     ports:
       - "5000:5000"
   db:
