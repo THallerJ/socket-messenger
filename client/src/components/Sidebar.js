@@ -80,7 +80,7 @@ const Sidebar = () => {
 		<div>
 			<div className={classes.drawerHeader}>
 				<Typography className={classes.drawerTitle} variant="h6">
-					Socket pop
+					Socket Messenger
 				</Typography>
 				<CopyToClipboard text={userId}>
 					<Button
